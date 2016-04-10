@@ -42,7 +42,7 @@ releases = collections.OrderedDict([
 def load_release(release):
     fn = os.path.join(cachedir, release + ".txt.gz")
     if not os.path.exists(fn):
-        logger.info("Downloading release file for {}".format(release))
+        logger.info("Downloading release file for {0}".format(release))
         url = releases[release] + "/allpackages?format=txt.gz"
         subprocess.check_output(["wget", url, "-O", fn])
 
@@ -86,11 +86,11 @@ def write_pp(module, release, environment, packages):
         'packages': packages,
     })
     stream.dump(open(path, 'w', encoding='utf-8'))
-    logger.info("Wrote class {} to {}".format(class_, path))
+    logger.info("Wrote class {0} to {1}".format(class_, path))
 
 
 def write_report(module, environments):
-    path = os.path.join(basedir, "report-{}.html".format(module))
+    path = os.path.join(basedir, "report-{0}.html".format(module))
     template = env.get_template('report.html')
     stream = template.stream({
         'module': module,
@@ -98,4 +98,4 @@ def write_report(module, environments):
         'envs': environments
     })
     stream.dump(open(path, 'w', encoding='utf-8'))
-    logger.info("Wrote report to {}".format(path))
+    logger.info("Wrote report to {0}".format(path))

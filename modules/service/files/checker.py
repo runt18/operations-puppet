@@ -81,7 +81,7 @@ def fetch_url(client, url, **kw):
         raise CheckServiceError("Timeout on connection while "
                                 "downloading {}".format(url))
     except Exception as e:
-        raise CheckServiceError("Generic connection error: {}".format(e))
+        raise CheckServiceError("Generic connection error: {0}".format(e))
 
 
 class CheckService(object):
@@ -123,7 +123,7 @@ class CheckService(object):
         """
         Returns an url pointing to the IP of the host to check.
         """
-        return "{}://{}:{}{}".format(self.base_url.scheme,
+        return "{0}://{1}:{2}{3}".format(self.base_url.scheme,
                                      self.host_ip,
                                      self.port,
                                      self._url_prefix)
@@ -186,7 +186,7 @@ class CheckService(object):
             for endpoint, data in self.get_endpoints():
                 ep_status, msg = self._check_endpoint(endpoint, data)
                 if ep_status != 'OK':
-                    res.append("{} ({}) is {}: {}".format(
+                    res.append("{0} ({1}) is {2}: {3}".format(
                         endpoint, data.get('title', 'no title'),
                         ep_status, msg))
                     ep_idx = self.nagios_codes.index(ep_status)
@@ -197,7 +197,7 @@ class CheckService(object):
             if status == 'OK':
                 message = "All endpoints are healthy"
         except Exception as e:
-            message = "Generic error: {}".format(e)
+            message = "Generic error: {0}".format(e)
             status = 'CRITICAL'
         print message
         sys.exit(self.nagios_codes.index(status))
@@ -210,7 +210,7 @@ class CheckService(object):
         req['http_host'] = self.http_host
         er = EndpointRequest(
             data.get('title',
-                     "test for {}".format(endpoint)),
+                     "test for {0}".format(endpoint)),
             self._url,
             data['http_method'],
             endpoint,
@@ -258,7 +258,7 @@ class EndpointRequest(object):
             response (dict): What we should test in the response
         """
         self.status = 'OK'
-        self.msg = 'Test "{}" healthy'.format(title)
+        self.msg = 'Test "{0}" healthy'.format(title)
         self.title = title
         self.method = http_method
         self._request(request)
@@ -284,7 +284,7 @@ class EndpointRequest(object):
             )
         except CheckServiceError as e:
             self.status = 'CRITICAL'
-            self.msg = "Could not fetch url {}: {}".format(
+            self.msg = "Could not fetch url {0}: {1}".format(
                 url, e)
             return
 
@@ -397,7 +397,7 @@ class EndpointRequest(object):
                 self.msg = ("Test {} responds with "
                             "unexpected body: {} => {}".format(
                                 self.title, prefix, data))
-                raise CheckServiceError("{} => {}".format(prefix, data))
+                raise CheckServiceError("{0} => {1}".format(prefix, data))
         return True
 
 
