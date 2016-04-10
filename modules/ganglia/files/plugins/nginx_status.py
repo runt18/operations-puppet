@@ -155,7 +155,7 @@ class UpdateNginxThread(threading.Thread):
                 try:
                     self._metrics_lock.acquire()
                     logging.debug(
-                        'metric: %s = %s' % (name, self.metrics[name]))
+                        'metric: {0!s} = {1!s}'.format(name, self.metrics[name]))
                     return self.metrics[name]
                 finally:
                     self._metrics_lock.release()
@@ -171,7 +171,7 @@ class UpdateNginxThread(threading.Thread):
                 try:
                     self._settings_lock.acquire()
                     logging.debug(
-                        'setting: %s = %s' % (name, self.settings[name]))
+                        'setting: {0!s} = {1!s}'.format(name, self.settings[name]))
                     return self.settings[name]
                 finally:
                     self._settings_lock.release()

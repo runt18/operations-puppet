@@ -56,7 +56,7 @@ def get_value(path):
 
 def write_value(path, value):
     """Write a (sysfs) value to path"""
-    print '%s = %s' % (path, value)
+    print '{0!s} = {1!s}'.format(path, value)
     open(path, 'w').write(value)
 
 
@@ -69,7 +69,7 @@ def get_cpu_list():
     # filter-out HyperThreading siblings
     cores = []
     for cpu in cpus:
-        path_threads = os.path.join(path_cpu, 'cpu%s' % cpu,
+        path_threads = os.path.join(path_cpu, 'cpu{0!s}'.format(cpu),
                                     'topology', 'thread_siblings_list')
         thread_siblings = get_value(path_threads).split(',')
         cores.append(int(thread_siblings[0]))
@@ -81,7 +81,7 @@ def get_cpu_list():
 def get_queues(device, qtype):
     """Get a list of rx or tx queues for device"""
     nodes = glob.glob(os.path.join('/sys/class/net', device, 'queues',
-                                   '%s-*' % qtype))
+                                   '{0!s}-*'.format(qtype)))
     queues = [int(os.path.basename(q)[3:]) for q in nodes]
 
     return sorted(queues)
@@ -134,10 +134,10 @@ def get_rx_irqs(rss_pattern, rx_queues):
 
     # If we don't get an *exact* match for the rx_queues list, give up
     if len(irqs) != len(rx_queues):
-        raise Exception('RSS IRQ count mismatch for pattern %s' % rss_pattern)
+        raise Exception('RSS IRQ count mismatch for pattern {0!s}'.format(rss_pattern))
     for rxq in rx_queues:
         if rxq not in irqs:
-            raise Exception('RSS IRQ missing for queue %d' % rxq)
+            raise Exception('RSS IRQ missing for queue {0:d}'.format(rxq))
 
     # Return a dict of rxq:rx_irq that matches rx_queues
     return irqs
@@ -151,15 +151,15 @@ def set_cpus(device, cpus, rxq, rx_irq, txqs):
     txt_bitmask = format(bitmask, 'x')
 
     if rx_irq:
-        irq_node = '/proc/irq/%s/smp_affinity' % rx_irq
+        irq_node = '/proc/irq/{0!s}/smp_affinity'.format(rx_irq)
         write_value(irq_node, txt_bitmask)
 
-    rx_node = '/sys/class/net/%s/queues/rx-%s/rps_cpus' % (device, rxq)
+    rx_node = '/sys/class/net/{0!s}/queues/rx-{1!s}/rps_cpus'.format(device, rxq)
     write_value(rx_node, txt_bitmask)
 
     if txqs:
         for i in txqs:
-            tx_node = '/sys/class/net/%s/queues/tx-%s/xps_cpus' % (device, i)
+            tx_node = '/sys/class/net/{0!s}/queues/tx-{1!s}/xps_cpus'.format(device, i)
             write_value(tx_node, txt_bitmask)
 
 
@@ -210,7 +210,7 @@ def main():
     rx_queues = get_queues(device, 'rx')
     tx_queues = get_queues(device, 'tx')
     driver = os.path.basename(
-        os.readlink('/sys/class/net/%s/device/driver/module' % device)
+        os.readlink('/sys/class/net/{0!s}/device/driver/module'.format(device))
     )
 
     if rss_pattern:

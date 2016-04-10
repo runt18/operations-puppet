@@ -37,7 +37,7 @@ class HhvmApcCollector(diamond.collector.Collector):
 
     def collect(self):
         req = urllib2.Request(self.config['url'])
-        req.add_header('User-Agent', '%s/1.0' % __file__)
+        req.add_header('User-Agent', '{0!s}/1.0'.format(__file__))
         try:
             response = urllib2.urlopen(req, None, self.config['timeout'])
             apc_info = self.parse_apc_info(response.read())

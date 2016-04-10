@@ -98,7 +98,7 @@ def find_type(orig, name):
         # anything fancier here.
         field = typ.fields()[0]
         if not field.is_base_class:
-            raise ValueError("Cannot find type %s::%s" % (str(orig), name))
+            raise ValueError("Cannot find type {0!s}::{1!s}".format(str(orig), name))
         typ = field.type
 
 
@@ -117,10 +117,10 @@ class SharedPointerPrinter:
             usecount = refcounts['_M_use_count']
             weakcount = refcounts['_M_weak_count']
             if usecount == 0:
-                state = 'expired, weak %d' % weakcount
+                state = 'expired, weak {0:d}'.format(weakcount)
             else:
-                state = 'count %d, weak %d' % (usecount, weakcount - 1)
-        return '%s (%s) %s' % (self.typename, state, self.val['_M_ptr'])
+                state = 'count {0:d}, weak {1:d}'.format(usecount, weakcount - 1)
+        return '{0!s} ({1!s}) {2!s}'.format(self.typename, state, self.val['_M_ptr'])
 
 
 class UniquePointerPrinter:
@@ -132,7 +132,7 @@ class UniquePointerPrinter:
 
     def to_string(self):
         v = self.val['_M_t']['_M_head_impl']
-        return ('std::unique_ptr<%s> containing %s' % (str(v.type.target()),
+        return ('std::unique_ptr<{0!s}> containing {1!s}'.format(str(v.type.target()),
                                                        str(v)))
 
 
@@ -158,7 +158,7 @@ class StdListPrinter:
             self.base = elt['_M_next']
             count = self.count
             self.count = self.count + 1
-            return ('[%d]' % count, elt['_M_data'])
+            return ('[{0:d}]'.format(count), elt['_M_data'])
 
     def __init__(self, typename, val):
         self.typename = typename
@@ -172,8 +172,8 @@ class StdListPrinter:
     def to_string(self):
         if (self.val['_M_impl']['_M_node'].address ==
                 self.val['_M_impl']['_M_node']['_M_next']):
-            return 'empty %s' % (self.typename)
-        return '%s' % (self.typename)
+            return 'empty {0!s}'.format((self.typename))
+        return '{0!s}'.format((self.typename))
 
 
 class StdListIteratorPrinter:
@@ -211,7 +211,7 @@ class StdSlistPrinter:
             self.base = elt['_M_next']
             count = self.count
             self.count = self.count + 1
-            return ('[%d]' % count, elt['_M_data'])
+            return ('[{0:d}]'.format(count), elt['_M_data'])
 
     def __init__(self, typename, val):
         self.val = val
@@ -278,13 +278,13 @@ class StdVectorPrinter:
                 if self.so >= self.isize:
                     self.item = self.item + 1
                     self.so = 0
-                return ('[%d]' % count, obit)
+                return ('[{0:d}]'.format(count), obit)
             else:
                 if self.item == self.finish:
                     raise StopIteration
                 elt = self.item.dereference()
                 self.item = self.item + 1
-                return ('[%d]' % count, elt)
+                return ('[{0:d}]'.format(count), elt)
 
     def __init__(self, typename, val):
         self.typename = typename
@@ -309,11 +309,9 @@ class StdVectorPrinter:
             bl = 8 * itype.sizeof
             length = (bl - so) + bl * ((finish - start) - 1) + fo
             capacity = bl * (end - start)
-            return ('%s<bool> of length %d, capacity %d'
-                    % (self.typename, int(length), int(capacity)))
+            return ('{0!s}<bool> of length {1:d}, capacity {2:d}'.format(self.typename, int(length), int(capacity)))
         else:
-            return ('%s of length %d, capacity %d'
-                    % (self.typename, int(finish - start), int(end - start)))
+            return ('{0!s} of length {1:d}, capacity {2:d}'.format(self.typename, int(finish - start), int(end - start)))
 
     def display_hint(self):
         return 'array'
@@ -378,9 +376,9 @@ class StdTuplePrinter:
             # the value "as is".
             fields = impl.type.fields()
             if len(fields) < 1 or fields[0].name != "_M_head_impl":
-                return ('[%d]' % self.count, impl)
+                return ('[{0:d}]'.format(self.count), impl)
             else:
-                return ('[%d]' % self.count, impl['_M_head_impl'])
+                return ('[{0:d}]'.format(self.count), impl['_M_head_impl'])
 
     def __init__(self, typename, val):
         self.typename = typename
@@ -391,8 +389,8 @@ class StdTuplePrinter:
 
     def to_string(self):
         if len(self.val.type.fields()) == 0:
-            return 'empty %s' % (self.typename)
-        return '%s containing' % (self.typename)
+            return 'empty {0!s}'.format((self.typename))
+        return '{0!s} containing'.format((self.typename))
 
 
 class StdStackOrQueuePrinter:
@@ -407,7 +405,7 @@ class StdStackOrQueuePrinter:
         return self.visualizer.children()
 
     def to_string(self):
-        return '%s wrapping: %s' % (self.typename,
+        return '{0!s} wrapping: {1!s}'.format(self.typename,
                                     self.visualizer.to_string())
 
     def display_hint(self):
@@ -506,7 +504,7 @@ class StdMapPrinter:
                 item = n['first']
             else:
                 item = self.pair['second']
-            result = ('[%d]' % self.count, item)
+            result = ('[{0:d}]'.format(self.count), item)
             self.count = self.count + 1
             return result
 
@@ -515,7 +513,7 @@ class StdMapPrinter:
         self.val = val
 
     def to_string(self):
-        return '%s with %d elements' % (self.typename,
+        return '{0!s} with {1:d} elements'.format(self.typename,
                                         len(RbtreeIterator(self.val)))
 
     def children(self):
@@ -548,7 +546,7 @@ class StdSetPrinter:
             item = item.cast(self.type).dereference()['_M_value_field']
             # FIXME: this is weird ... what to do?
             # Maybe a 'set' display hint?
-            result = ('[%d]' % self.count, item)
+            result = ('[{0:d}]'.format(self.count), item)
             self.count = self.count + 1
             return result
 
@@ -557,7 +555,7 @@ class StdSetPrinter:
         self.val = val
 
     def to_string(self):
-        return '%s with %d elements' % (self.typename,
+        return '{0!s} with {1:d} elements'.format(self.typename,
                                         len(RbtreeIterator(self.val)))
 
     def children(self):
@@ -578,7 +576,7 @@ class StdBitsetPrinter:
     def to_string(self):
         # If template_argument handled values, we could print the
         # size.  Or we could use a regexp on the type.
-        return '%s' % (self.typename)
+        return '{0!s}'.format((self.typename))
 
     def children(self):
         words = self.val['_M_w']
@@ -602,7 +600,7 @@ class StdBitsetPrinter:
             while w != 0:
                 if (w & 1) != 0:
                     # Another spot where we could use 'set'?
-                    result.append(('[%d]' % (byte * tsize * 8 + bit), 1))
+                    result.append(('[{0:d}]'.format((byte * tsize * 8 + bit)), 1))
                 bit = bit + 1
                 w = w >> 1
             byte = byte + 1
@@ -630,7 +628,7 @@ class StdDequePrinter:
             if self.p == self.last:
                 raise StopIteration
 
-            result = ('[%d]' % self.count, self.p.dereference())
+            result = ('[{0:d}]'.format(self.count), self.p.dereference())
             self.count = self.count + 1
 
             # Advance the 'cur' pointer.
@@ -664,7 +662,7 @@ class StdDequePrinter:
 
         size = self.buffer_size * delta_n + delta_s + delta_e
 
-        return '%s with %d elements' % (self.typename, long(size))
+        return '{0!s} with {1:d} elements'.format(self.typename, long(size))
 
     def children(self):
         start = self.val['_M_impl']['_M_start']
@@ -748,12 +746,12 @@ class Tr1UnorderedSetPrinter:
         return self.val['_M_h']
 
     def to_string(self):
-        return '%s with %d elements' % (
+        return '{0!s} with {1:d} elements'.format(
             self.typename, self.hashtable()['_M_element_count'])
 
     @staticmethod
     def format_count(i):
-        return '[%d]' % i
+        return '[{0:d}]'.format(i)
 
     def children(self):
         counter = imap(self.format_count, itertools.count())
@@ -774,7 +772,7 @@ class Tr1UnorderedMapPrinter:
         return self.val['_M_h']
 
     def to_string(self):
-        return '%s with %d elements' % (
+        return '{0!s} with {1:d} elements'.format(
             self.typename, self.hashtable()['_M_element_count'])
 
     @staticmethod
@@ -789,7 +787,7 @@ class Tr1UnorderedMapPrinter:
 
     @staticmethod
     def format_count(i):
-        return '[%d]' % i
+        return '[{0:d}]'.format(i)
 
     def children(self):
         counter = imap(self.format_count, itertools.count())
@@ -826,7 +824,7 @@ class StdForwardListPrinter:
             self.count = self.count + 1
             valptr = elt['_M_storage'].address
             valptr = valptr.cast(elt.type.template_argument(0).pointer())
-            return ('[%d]' % count, valptr.dereference())
+            return ('[{0:d}]'.format(count), valptr.dereference())
 
     def __init__(self, typename, val):
         self.val = val
@@ -839,8 +837,8 @@ class StdForwardListPrinter:
 
     def to_string(self):
         if self.val['_M_impl']['_M_head']['_M_next'] == 0:
-            return 'empty %s' % (self.typename)
-        return '%s' % (self.typename)
+            return 'empty {0!s}'.format((self.typename))
+        return '{0!s}'.format((self.typename))
 
 
 # A "regular expression" printer which conforms to the
@@ -877,7 +875,7 @@ class Printer(object):
         # FIXME
         if not self.compiled_rx.match(name + '<>'):
             raise ValueError(
-                'libstdc++ programming error: "%s" does not match' % name)
+                'libstdc++ programming error: "{0!s}" does not match'.format(name))
         printer = RxPrinter(name, function)
         self.subprinters.append(printer)
         self.lookup[name] = printer

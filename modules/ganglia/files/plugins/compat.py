@@ -106,9 +106,9 @@ class Counter(dict):
 
     def __repr__(self):
         if not self:
-            return '%s()' % self.__class__.__name__
+            return '{0!s}()'.format(self.__class__.__name__)
         items = ', '.join(map('%r: %r'.__mod__, self.most_common()))
-        return '%s({%s})' % (self.__class__.__name__, items)
+        return '{0!s}({{{1!s}}})'.format(self.__class__.__name__, items)
 
     # Multiset-style mathematical operations discussed in:
     #       Knuth TAOCP Volume II section 4.6.3 exercise 19

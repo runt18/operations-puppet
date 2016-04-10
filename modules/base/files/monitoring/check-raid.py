@@ -140,7 +140,7 @@ def checkmptsas():
                                 '--status_only'],
                                 stdout=subprocess.PIPE)
     except Exception as e:
-        print 'Unable to execute mpt-status: %s' % e
+        print 'Unable to execute mpt-status: {0!s}'.format(e)
         return 254
 
     log_drive_re = re.compile('^log_id \d (\w+)$')
@@ -149,12 +149,12 @@ def checkmptsas():
     for line in proc.stdout:
         m = log_drive_re.match(line)
         if m is not None:
-            print 'RAID STATUS: %s' % m.group(1)
+            print 'RAID STATUS: {0!s}'.format(m.group(1))
             if m.group(1) != 'OPTIMAL':
                 status = 1
         m = phy_drive_re.match(line)
         if m is not None:
-            print 'DISK %s STATUS: %s' % (m.group(1), m.group(2))
+            print 'DISK {0!s} STATUS: {1!s}'.format(m.group(1), m.group(2))
 
     proc.wait()
 
@@ -193,24 +193,23 @@ def checkAdaptec():
         if m is not None:
             numLogical = int(m.group(1))
             if m.group(2) != '0' and m.group(3) != '0':
-                print 'CRITICAL: logical devices: %s failed and %s defunct' % \
-                    (m.group(2), m.group(3))
+                print 'CRITICAL: logical devices: {0!s} failed and {1!s} defunct'.format(m.group(2), m.group(3))
                 status = 2
                 break
             if m.group(2) != '0':
-                print 'CRITICAL: logical devices: %s failed' % \
-                    (m.group(2))
+                print 'CRITICAL: logical devices: {0!s} failed'.format( \
+                    (m.group(2)))
                 status = 2
                 break
             if m.group(3) != '0':
-                print 'CRITICAL: logical devices: %s defunct' % \
-                    (m.group(3))
+                print 'CRITICAL: logical devices: {0!s} defunct'.format( \
+                    (m.group(3)))
                 status = 2
                 break
 
     ret = proc.wait()
     if status == 0 and ret != 0:
-        print 'WARNING: arcconf returned exit status %d' % (ret)
+        print 'WARNING: arcconf returned exit status {0:d}'.format((ret))
         status = 1
 
     if status == 0 and numLogical is None:
@@ -218,7 +217,7 @@ def checkAdaptec():
         status = 1
 
     if status == 0:
-        print 'OK: %d logical device(s) checked' % numLogical
+        print 'OK: {0:d} logical device(s) checked'.format(numLogical)
 
     os.chdir(oldDir)
     return status
@@ -242,7 +241,7 @@ def check3ware():
 
     ret = proc.wait()
     if ret != 0:
-        print 'WARNING: tw_cli returned exit status %d' % (ret)
+        print 'WARNING: tw_cli returned exit status {0:d}'.format((ret))
         return 1
 
     # Check each controller
@@ -262,15 +261,14 @@ def check3ware():
         proc.wait()
 
     if len(failedDrives) != 0:
-        print ('CRITICAL: %d failed drive(s): %s' %
-               (len(failedDrives), ', '.join(failedDrives)))
+        print ('CRITICAL: {0:d} failed drive(s): {1!s}'.format(len(failedDrives), ', '.join(failedDrives)))
         return 2
 
     if numDrives == 0:
         print 'WARNING: no physical drives found, tw_cli parse error?'
         return 1
     else:
-        print 'OK: %d drives checked' % numDrives
+        print 'OK: {0:d} drives checked'.format(numDrives)
         return 0
 
 
@@ -281,7 +279,7 @@ def checkMegaSas():
                                 stdout=subprocess.PIPE)
     except:
         error = sys.exc_info()[1]
-        print 'WARNING: error executing megacli: %s' % str(error)
+        print 'WARNING: error executing megacli: {0!s}'.format(str(error))
         return 1
 
     stateRegex = re.compile('^State\s*:\s*([^\n]*)')
@@ -319,7 +317,7 @@ def checkMegaSas():
 
     ret = proc.wait()
     if ret != 0:
-        print 'WARNING: megacli returned exit status %d' % (ret)
+        print 'WARNING: megacli returned exit status {0:d}'.format((ret))
         return 1
 
     if lines == 0:
@@ -335,10 +333,10 @@ def checkMegaSas():
         return 0
 
     if failedLD > 0:
-        print 'CRITICAL: %d failed LD(s) (%s)' % (failedLD, ", ".join(states))
+        print 'CRITICAL: {0:d} failed LD(s) ({1!s})'.format(failedLD, ", ".join(states))
         return 2
 
-    print 'OK: optimal, %d logical, %d physical' % (numLD, numPD)
+    print 'OK: optimal, {0:d} logical, {1:d} physical'.format(numLD, numPD)
     return 0
 
 
@@ -348,7 +346,7 @@ def checkZfs():
                                 stdout=subprocess.PIPE)
     except:
         error = sys.exc_info()[1]
-        print 'WARNING: error executing zpool: %s' % str(error)
+        print 'WARNING: error executing zpool: {0!s}'.format(str(error))
         return 1
 
     regex = re.compile('^(\S+)\s+(\S+)')
@@ -368,7 +366,7 @@ def checkZfs():
 
     ret = proc.wait()
     if ret != 0:
-        print 'WARNING: zpool returned exit status %d' % (ret)
+        print 'WARNING: zpool returned exit status {0:d}'.format((ret))
         return 1
 
     if status:
@@ -390,7 +388,7 @@ def checkSoftwareRaid():
         proc = subprocess.Popen(args, stdout=subprocess.PIPE)
     except:
         error = sys.exc_info()[1]
-        print 'WARNING: error executing mdadm: %s' % str(error)
+        print 'WARNING: error executing mdadm: {0!s}'.format(str(error))
         return 1
 
     dre = '^(/[^ ]*):$'
@@ -421,7 +419,7 @@ def checkSoftwareRaid():
 
     ret = proc.wait()
     if ret != 0:
-        print 'WARNING: mdadm returned exit status %d' % (ret)
+        print 'WARNING: mdadm returned exit status {0:d}'.format((ret))
         return 1
 
     msg = ''

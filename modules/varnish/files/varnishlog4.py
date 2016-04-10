@@ -136,9 +136,9 @@ def parse_varnishlog_args(args):
     for switch, value in args:
         # eg: switch = "i", value = "ReqUrl"
         if switch == "i" and value not in vapi.VSL_tags_rev:
-            raise Exception("Unknown Tag: %s" % value)
+            raise Exception("Unknown Tag: {0!s}".format(value))
 
-        parsed_args.append("-%s" % switch)
+        parsed_args.append("-{0!s}".format(switch))
         if value:
             parsed_args.append(value)
 
@@ -177,7 +177,7 @@ if __name__ == '__main__':
     ]
 
     def print_tags_callback(transaction_id, tag, value, remote_party):
-        print("transaction_id: %s, tag: %s, value: %s, remote_party: %s" % (
+        print("transaction_id: {0!s}, tag: {1!s}, value: {2!s}, remote_party: {3!s}".format(
             transaction_id, tag, value, remote_party))
 
     varnishlog(args, print_tags_callback)

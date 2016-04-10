@@ -82,12 +82,12 @@ for userName, userData in d['users'].items():
 
     if outGroup not in dataOut:
         dataOut[outGroup] = {}
-    dataOut[outGroup][realName] = """{{:System administrators/table/row
-  | name = %s
-  | link = %s
-  | ircnick = %s
-  | affiliation = %s
-%s}}""" % (realName, link, ircnick, affiliation, groupWikitext)
+    dataOut[outGroup][realName] = """{{{{:System administrators/table/row
+  | name = {0!s}
+  | link = {1!s}
+  | ircnick = {2!s}
+  | affiliation = {3!s}
+{4!s}}}}}""".format(realName, link, ircnick, affiliation, groupWikitext)
 
 ops = sorted(dataOut["ops"].items())
 deployers = sorted(dataOut["deployment"].items())

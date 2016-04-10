@@ -71,7 +71,7 @@ class DeleteProxy(tables.DeleteAction):
         # First let's make sure that this proxy is really ours to delete.
         existing_domains = [proxy.domain for proxy in get_proxy_list(request)]
         if obj_id not in existing_domains:
-            raise Exception("Proxy \'%s\' is to be deleted but is not owned by this view." % obj_id)
+            raise Exception("Proxy \'{0!s}\' is to be deleted but is not owned by this view.".format(obj_id))
 
         if domain == 'wmflabs.org.':
             auth = identity_generic.Password(
@@ -250,7 +250,7 @@ class CreateProxyForm(forms.SelfHandlingForm):
             c.records.create(domainid, record)
 
         d = {
-            "backends": ['http://%s.%s.eqiad.wmflabs:%s' % (
+            "backends": ['http://{0!s}.{1!s}.eqiad.wmflabs:{2!s}'.format(
                 data.get('backendInstance'),
                 request.user.project_name,
                 data.get('backendPort')

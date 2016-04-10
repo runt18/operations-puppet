@@ -258,8 +258,8 @@ metric_defs = {
 
 def print_exception(custom_msg, exception):
     error_msg = custom_msg or "An error has occurred"
-    print "%s %s" % (error_msg, exception),
-    print "Code: %s, Message: %s" % (exception.pgcode, exception.pgerror)
+    print "{0!s} {1!s}".format(error_msg, exception),
+    print "Code: {0!s}, Message: {1!s}".format(exception.pgcode, exception.pgerror)
 
 
 class UpdateMetricThread(threading.Thread):
@@ -386,7 +386,7 @@ if __name__ == '__main__':
         import getpass
         script_name = os.path.basename(__file__)
         params['dbpass'] = getpass.getpass(
-            prompt="%s password: " % script_name)
+            prompt="{0!s} password: ".format(script_name))
     try:
         metric_init(params)
         while True:

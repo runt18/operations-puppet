@@ -73,7 +73,7 @@ class UploadDir(object):
             sys.stderr.write("unexpected output from '%s'"
                              "(getting site and lang for %s)\n"
                              % (command_string, wiki))
-            sys.stderr.write("output received was: %s\n" % result)
+            sys.stderr.write("output received was: {0!s}\n".format(result))
             return None, None
         site, lang = result.split('\t', 1)
         return site, lang
@@ -202,7 +202,7 @@ def main():
     for wiki in wikilist:
         result = upload.get_media_dir(wiki)
         if result:
-            print "%s\t%s" % (wiki, result)
+            print "{0!s}\t{1!s}".format(wiki, result)
 
 if __name__ == "__main__":
     main()

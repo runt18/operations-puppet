@@ -26,7 +26,7 @@ def check(endpoint):
                 else:
                     return "NOT OK", 503
             except Exception as e:
-                return "Caught exception: %s" % str(e), 503
+                return "Caught exception: {0!s}".format(str(e)), 503
         # Fix for https://github.com/mitsuhiko/flask/issues/796
         actual_check.__name__ = func.__name__
         return app.route(endpoint)(actual_check)
@@ -40,7 +40,7 @@ def puppet_catalog_check():
     fqdn = socket.getfqdn()
     keyfile = "/var/lib/toolschecker/puppetcerts/key.pem"
     certfile = "/var/lib/toolschecker/puppetcerts/cert.pem"
-    url = "https://%s:8140/production/catalog/%s" % (puppetmaster, fqdn)
+    url = "https://{0!s}:8140/production/catalog/{1!s}".format(puppetmaster, fqdn)
     request = requests.get(url, verify=True, cert=(certfile, keyfile))
     if request.status_code != 200:
         return False
@@ -192,11 +192,11 @@ def continuous_job_trusty():
 
 def grid_check_start(release):
     """Launch a new job, return True if it starts in 10 seconds"""
-    name = 'start-%s-test' % release
+    name = 'start-{0!s}-test'.format(release)
     try:
         with open(os.devnull, 'w') as devnull:
             subprocess.check_call(['/usr/bin/jstart', '-N', name,
-                                   '-l', 'release=%s' % release,
+                                   '-l', 'release={0!s}'.format(release),
                                    '/bin/sleep', '600'],
                                   stderr=devnull, stdout=devnull)
     except subprocess.CalledProcessError:
@@ -240,12 +240,12 @@ def db_read_write_check(host, db):
         )
         cur = connection.cursor()
         magicnumber = int(time.time())
-        cur.execute("INSERT INTO test (test) VALUES (%s)" % magicnumber)
+        cur.execute("INSERT INTO test (test) VALUES ({0!s})".format(magicnumber))
         connection.commit()
-        cur.execute("SELECT * FROM test WHERE test=%s" % magicnumber)
+        cur.execute("SELECT * FROM test WHERE test={0!s}".format(magicnumber))
         result = cur.fetchone()
         if result:
-            cur.execute('DELETE FROM test WHERE test=%s' % magicnumber)
+            cur.execute('DELETE FROM test WHERE test={0!s}'.format(magicnumber))
             connection.commit()
             success = True
     finally:
@@ -264,15 +264,14 @@ def postgres_read_write_check():
 
     try:
         connection = psycopg2.connect(
-            "host=labsdb1004.eqiad.wmnet dbname=%s_rwtest user=%s password=%s"
-            % (user, user, password))
+            "host=labsdb1004.eqiad.wmnet dbname={0!s}_rwtest user={1!s} password={2!s}".format(user, user, password))
         cur = connection.cursor()
-        cur.execute("INSERT INTO test (test) VALUES (%s)" % magicnumber)
+        cur.execute("INSERT INTO test (test) VALUES ({0!s})".format(magicnumber))
         connection.commit()
-        cur.execute("SELECT * FROM test WHERE test=%s" % magicnumber)
+        cur.execute("SELECT * FROM test WHERE test={0!s}".format(magicnumber))
         result = cur.fetchone()
         if result:
-            cur.execute('DELETE FROM test WHERE test=%s' % magicnumber)
+            cur.execute('DELETE FROM test WHERE test={0!s}'.format(magicnumber))
             connection.commit()
             success = True
     finally:

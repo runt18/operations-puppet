@@ -48,7 +48,7 @@ class WDQSUpdaterCollector(diamond.collector.Collector):
         return qname.replace(' ', '_').replace('/', '.')
 
     def get_data(self, metric):
-        url = "%sread/metrics:name=%s" % (self.url, metric)
+        url = "{0!s}read/metrics:name={1!s}".format(self.url, metric)
         req = urllib2.Request(url)
         response = urllib2.urlopen(req)
         data = json.loads(response.read())

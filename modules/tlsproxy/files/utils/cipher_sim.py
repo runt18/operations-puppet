@@ -99,8 +99,7 @@ def load_server_pref(pref_str):
     for ossl_line in ossl_out.splitlines():
         result = matcher.match(ossl_line)
         if not result:
-            raise Exception("Regex failed on openssl output: >> %s <<"
-                            % (ossl_line))
+            raise Exception("Regex failed on openssl output: >> {0!s} <<".format((ossl_line)))
         # This converts e.g. 0xC0,0x2B -> 49195
         cnum = (int(result.group(1), 16) * 256) + int(result.group(2), 16)
         server_pref.append([
@@ -135,11 +134,10 @@ def main():
     server_pref = load_server_pref(spref_str)
     cipher_stats = process_stdin(server_pref)
     total = sum(cipher_stats.values())
-    print "Total ClientHellos             | %d" % (total)
+    print "Total ClientHellos             | {0:d}".format((total))
     print "-----------------------------------------------"
     for kv in cipher_stats.most_common():
-        print "%-30s | %06.3f%% (%d)" % \
-              (kv[0], 100 * float(kv[1]) / total, kv[1])
+        print "{0:<30!s} | {1:06.3f}% ({2:d})".format(kv[0], 100 * float(kv[1]) / total, kv[1])
 
 if __name__ == '__main__':
     main()

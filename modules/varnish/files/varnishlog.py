@@ -92,7 +92,7 @@ def varnishlog(vsl_args, callback):
     for (arg, value) in vsl_args:
         arg_value = value.encode('utf-8') if value is not None else value
         if varnishapi.VSL_Arg(vd, ord(arg), arg_value) != 1:
-            raise OSError('VSL_Arg(vd, "%s", "%s")' % (arg, value))
+            raise OSError('VSL_Arg(vd, "{0!s}", "{1!s}")'.format(arg, value))
 
     if varnishapi.VSL_Open(vd, 1) != 0:
         raise OSError('VSL_Open(vd, 1)')
@@ -161,7 +161,7 @@ def print_tags_callback(transaction_id, tag, value, remote_party):
     else:
         remote_party = remote_party[0]
 
-    print("%s %s %s %s" % (
+    print("{0!s} {1!s} {2!s} {3!s}".format(
         str(transaction_id).rjust(5),
         tag.ljust(12),
         remote_party,

@@ -37,7 +37,7 @@ with open('/etc/wmflabs-project') as f:
 
 
 def connect(server, username, password):
-    conn = ldap.initialize('ldap://%s:389' % server)
+    conn = ldap.initialize('ldap://{0!s}:389'.format(server))
     conn.protocol_version = ldap.VERSION3
     conn.start_tls_s()
     conn.simple_bind_s(username, password)
@@ -49,7 +49,7 @@ def scold():
         config = yaml.safe_load(f)
 
     conn = connect(config['servers'][0], config['user'], config['password'])
-    roledn = "cn=projectadmin,cn=%s,ou=projects,%s" % (PROJECT_NAME,
+    roledn = "cn=projectadmin,cn={0!s},ou=projects,{1!s}".format(PROJECT_NAME,
                                                        config['basedn'])
 
     hostname = socket.gethostname()
@@ -70,7 +70,7 @@ For further support, visit #wikimedia-labs on freenode or visit
 https://wikitech.wikimedia.org
 """.format(instance=hostname, project=PROJECT_NAME)
 
-    subject = "Alert:  puppet failed on %s.%s.eqiad.wmflabs" % (hostname,
+    subject = "Alert:  puppet failed on {0!s}.{1!s}.eqiad.wmflabs".format(hostname,
                                                                 PROJECT_NAME)
 
     adminrec = conn.search_s(

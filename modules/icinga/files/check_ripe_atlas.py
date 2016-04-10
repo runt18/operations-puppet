@@ -5,7 +5,7 @@ import sys
 
 if '-h' in sys.argv:
     print "Monitor the failure rate of a target with RIPE Atlas"
-    print "Usage %s <UDM_id> <loss_allow> <failures> " % (sys.argv[0])
+    print "Usage {0!s} <UDM_id> <loss_allow> <failures> ".format((sys.argv[0]))
     print ""
     print "UDM_id       = numeric check ID from RIPE Atlas"
     print "loss_allow   = number percentage of packet loss allowable"
@@ -22,9 +22,9 @@ msg = "%s - failed %d probes of %d (alerts on %s) - " \
 
 def main():
 
-    udm = '%s/' % (UDM_id,)
-    failures = '?permitted_total_alerts=%s' % (allowed_failures,)
-    loss = '&max_packet_loss=%s' % (loss_allowed)
+    udm = '{0!s}/'.format(UDM_id)
+    failures = '?permitted_total_alerts={0!s}'.format(allowed_failures)
+    loss = '&max_packet_loss={0!s}'.format((loss_allowed))
     url = ripeurl + udm + failures + loss
 
     request = urllib2.Request(url)
@@ -37,8 +37,8 @@ def main():
         print "Allowed Failures ", allowed_failures
         print "Allowed % percent loss", loss_allowed
         print "Total", total_probes
-        print "Failed (%d): %s" % (len(failed_probes),
-                                   failed_probes,)
+        print "Failed ({0:d}): {1!s}".format(len(failed_probes),
+                                   failed_probes)
         print url
         print ''
 

@@ -84,8 +84,7 @@ class ForwarderBot(ircbot.SingleServerIRCBot):
 
     def log_event(self, connection, event):
         if connection.real_nickname in [event._source, event._target]:
-            logging.info('%(_eventtype)s [%(_source)s -> %(_target)s]'
-                         % vars(event))
+            logging.info('{_eventtype!s} [{_source!s} -> {_target!s}]'.format(**vars(event)))
 
     def on_welcome(self, connection, event):
         for channel in self.target_channels:

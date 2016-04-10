@@ -114,7 +114,7 @@ class LDAPSupportLib:
             if self.sslType == "start_tls":
                 ds.start_tls_s()
         except Exception:
-            sys.stderr.write("Unable to connect to LDAP host: %s\n" % self.ldapHost)
+            sys.stderr.write("Unable to connect to LDAP host: {0!s}\n".format(self.ldapHost))
             traceback.print_exc(file=sys.stderr)
             sys.exit(1)
 
@@ -131,7 +131,7 @@ class LDAPSupportLib:
             sys.stderr.write("Unable to locate the bind DN account.\n")
             sys.exit(1)
         except ldap.UNWILLING_TO_PERFORM, msg:
-            sys.stderr.write("The LDAP server was unwilling to perform the action requested.\nError was: %s\n" % msg[0]["info"])
+            sys.stderr.write("The LDAP server was unwilling to perform the action requested.\nError was: {0!s}\n".format(msg[0]["info"]))
             sys.exit(1)
         except ldap.INVALID_CREDENTIALS:
             sys.stderr.write("Password incorrect.\n")

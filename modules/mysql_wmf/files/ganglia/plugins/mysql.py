@@ -308,7 +308,7 @@ def update_stats(get_innodb=True, get_master=True, get_slave=True, innodb_versio
     logging.debug('mysql_stats: ' + str(mysql_stats))
 
 def get_stat(name):
-    logging.info("getting stat: %s" % name)
+    logging.info("getting stat: {0!s}".format(name))
     global mysql_stats
     #logging.debug(mysql_stats)
 
@@ -325,11 +325,11 @@ def get_stat(name):
         else:
             label = name
 
-        logging.debug("fetching %s" % name)
+        logging.debug("fetching {0!s}".format(name))
         try:
             return mysql_stats[label]
         except:
-            logging.error("failed to fetch %s" % name)
+            logging.error("failed to fetch {0!s}".format(name))
             return 0
     else:
         return 0
@@ -1047,9 +1047,8 @@ if __name__ == '__main__':
     for d in descriptors:
         v = d['call_back'](d['name'])
         if not options.quiet:
-            print ' %s: %s %s [%s]' % (d['name'], v, d['units'], d['description'])
+            print ' {0!s}: {1!s} {2!s} [{3!s}]'.format(d['name'], v, d['units'], d['description'])
 
         if options.gmetric:
-            cmd = "%s --conf=%s --value='%s' --units='%s' --type='%s' --name='%s' --slope='%s'" % \
-                (options.gmetric_bin, options.gmond_conf, v, d['units'], d['value_type'], d['name'], d['slope'])
+            cmd = "{0!s} --conf={1!s} --value='{2!s}' --units='{3!s}' --type='{4!s}' --name='{5!s}' --slope='{6!s}'".format(options.gmetric_bin, options.gmond_conf, v, d['units'], d['value_type'], d['name'], d['slope'])
             os.system(cmd)

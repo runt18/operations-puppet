@@ -15,7 +15,7 @@ class PhpRunner(object):
         self.wiki = wiki
 
     def run_php_scriptlet(self):
-        command = ["php", "--", "--wiki=%s" % self.wiki]
+        command = ["php", "--", "--wiki={0!s}".format(self.wiki)]
         return self.run_command(command)
 
     def run_command(self, command):
@@ -33,7 +33,7 @@ class PhpRunner(object):
             if error:
                 sys.stderr.write(error + '\n')
         except:
-            sys.stderr.write("command %s failed\n" % command)
+            sys.stderr.write("command {0!s} failed\n".format(command))
             raise
         return result
 
@@ -45,23 +45,22 @@ class PhpRunner(object):
                 "require_once( \"$dir/maintenance/Maintenance.php\" );"
                 % self.script_path)
         else:
-            php_setup = ("require_once( '%s/Maintenance.php' );"
-                         % self.script_path)
+            php_setup = ("require_once( '{0!s}/Maintenance.php' );".format(self.script_path))
         return "<?php\n" + php_setup + self.fillin_scriptlet_template()
 
     def fillin_scriptlet_template(self):
         return """
-class MaintenanceScriptlet extends Maintenance {
-    public function __construct() {
+class MaintenanceScriptlet extends Maintenance {{
+    public function __construct() {{
         parent::__construct();
-    }
-    public function execute() {
-    %s
-    }
-}
+    }}
+    public function execute() {{
+    {0!s}
+    }}
+}}
 $maintClass = "MaintenanceScriptlet";
 require_once( RUN_MAINTENANCE_IF_MAIN );
-""" % self.php_body
+""".format(self.php_body)
 
 
 def usage(message):
@@ -157,7 +156,7 @@ def do_main():
         if not prunner.run_php_scriptlet():
             fails += 1
     if fails:
-        sys.stderr.write("%s job(s) failed, see output for details.\n" % fails)
+        sys.stderr.write("{0!s} job(s) failed, see output for details.\n".format(fails))
 
 
 if __name__ == "__main__":

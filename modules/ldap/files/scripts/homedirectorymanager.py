@@ -158,7 +158,7 @@ class HomeDirectoryManager:
                 try:
                     modifyTimestamp = user[1]['modifyTimestamp']
                 except KeyError:
-                    self.logDebug("No modifyTimestamp for %s" % uid)
+                    self.logDebug("No modifyTimestamp for {0!s}".format(uid))
                     continue
 
                 AllUsers[uid] = {}
@@ -174,7 +174,7 @@ class HomeDirectoryManager:
             self.createHomeDir(AllUsers)
 
         except ldap.UNWILLING_TO_PERFORM, msg:
-            sys.stderr.write("The search returned an error. Error was: %s\n" % msg[0]["info"])
+            sys.stderr.write("The search returned an error. Error was: {0!s}\n".format(msg[0]["info"]))
             ds.unbind()
             return 1
         except Exception:
@@ -207,7 +207,7 @@ class HomeDirectoryManager:
                 continue
 
             self.updates['create'].append(user)
-            self.log("Creating a home directory for %s at %s%s" % (user, self.basedir, user))
+            self.log("Creating a home directory for {0!s} at {1!s}{2!s}".format(user, self.basedir, user))
             self.mkdir(self.basedir + user, 0700)
             self.mkdir(self.basedir + user + '/.ssh', 0700)
             self.writeKeys(user, users[user]['sshPublicKey'])
@@ -304,7 +304,7 @@ class HomeDirectoryManager:
 
             newGid = users[userdir]["gidNumber"]
             self.updates['chgrp'].append(userdir)
-            self.log("Changing group ownership of %s%s to %s; was set to %s" % (self.basedir, userdir, newGid, gid))
+            self.log("Changing group ownership of {0!s}{1!s} to {2!s}; was set to {3!s}".format(self.basedir, userdir, newGid, gid))
 
             # Python doesn't have a recursive chown, so we have to walk the directory
             # and change everything manually
@@ -329,7 +329,7 @@ class HomeDirectoryManager:
 
             newUid = users[userdir]["uidNumber"]
             self.updates['chown'].append(userdir)
-            self.log("Changing ownership of %s%s to %s; was set to %s" % (self.basedir, userdir, newUid, uid))
+            self.log("Changing ownership of {0!s}{1!s} to {2!s}; was set to {3!s}".format(self.basedir, userdir, newUid, uid))
             # Python doesn't have a recursive chown, so we have to walk the directory
             # and change everything manually
             self.chown(self.basedir + userdir, newUid, -1)
@@ -357,7 +357,7 @@ class HomeDirectoryManager:
                 # let's overwrite them
                 self.writeKeys(userdir, users[userdir]['sshPublicKey'])
                 self.updates['key'].append(userdir)
-                self.log("Updating keys for %s at %s" % (userdir, self.basedir + userdir))
+                self.log("Updating keys for {0!s} at {1!s}".format(userdir, self.basedir + userdir))
                 os.utime(self.basedir + userdir + "/.ssh/authorized_keys", (atime, time.mktime(d_ldap_mtime.timetuple())))
 
     def log(self, logstring):
@@ -373,17 +373,17 @@ class HomeDirectoryManager:
     def log_project(self, user, update_type, project_list):
         self.updates = {'create': [], 'chgrp': [], 'chown': [], 'rename': [], 'delete': [], 'keys': []}
         if update_type == 'create':
-            self.log("Created a home directory for %s in project(s): %s" % (user, ','.join(project_list)))
+            self.log("Created a home directory for {0!s} in project(s): {1!s}".format(user, ','.join(project_list)))
         if update_type == 'key':
-            self.log("User %s may have been modified in LDAP or locally, updating key in project(s): %s" % (user, ','.join(project_list)))
+            self.log("User {0!s} may have been modified in LDAP or locally, updating key in project(s): {1!s}".format(user, ','.join(project_list)))
         if update_type == 'delete':
-            self.log("Deleting home directory for %s in project(s): %s" % (user, ','.join(project_list)))
+            self.log("Deleting home directory for {0!s} in project(s): {1!s}".format(user, ','.join(project_list)))
         if update_type == 'chown':
-            self.log("User %s has a new uid, changing ownership in project(s): %s" % (user, ','.join(project_list)))
+            self.log("User {0!s} has a new uid, changing ownership in project(s): {1!s}".format(user, ','.join(project_list)))
         if update_type == 'chgrp':
-            self.log("User %s has a new gid, changing ownership in project(s): %s" % (user, ','.join(project_list)))
+            self.log("User {0!s} has a new gid, changing ownership in project(s): {1!s}".format(user, ','.join(project_list)))
         if update_type == 'rename':
-            self.log("User %s has been renamed, moving home directory in project(s): %s" % (user, ','.join(project_list)))
+            self.log("User {0!s} has been renamed, moving home directory in project(s): {1!s}".format(user, ','.join(project_list)))
 
     def logDebug(self, logstring):
         if self.loglevel >= DEBUG:
@@ -409,19 +409,19 @@ class HomeDirectoryManager:
         if not self.dryRun:
             os.chown(path, user, group)
         if self.dryRun or self.loglevel >= DEBUG:
-            self.log('chown %s %d %d' % (path, user, group))
+            self.log('chown {0!s} {1:d} {2:d}'.format(path, user, group))
 
     def mkdir(self, path, mode):
         if not self.dryRun:
             os.mkdir(path, mode)
         if self.dryRun or self.loglevel >= DEBUG:
-            self.log('mkdir %s %o' % (path, mode))
+            self.log('mkdir {0!s} {1:o}'.format(path, mode))
 
     def chmod(self, path, mode):
         if not self.dryRun:
             os.chmod(path, mode)
         if self.dryRun or self.loglevel >= DEBUG:
-            self.log('chmod %s %o' % (path, mode))
+            self.log('chmod {0!s} {1:o}'.format(path, mode))
 
     def writeFile(self, path, contents):
         if not self.dryRun:
@@ -429,19 +429,19 @@ class HomeDirectoryManager:
             f.write(contents)
             f.close()
         if self.dryRun or self.loglevel >= DEBUG:
-            self.log("write file %s:\n%s" % (path, contents))
+            self.log("write file {0!s}:\n{1!s}".format(path, contents))
 
     def rename(self, oldPath, newPath):
         if not self.dryRun:
             os.rename(oldPath, newPath)
         if self.dryRun or self.loglevel >= DEBUG:
-            self.log('rename %s %s' % (oldPath, newPath))
+            self.log('rename {0!s} {1!s}'.format(oldPath, newPath))
 
     def copy(self, srcPath, dstPath):
         if not self.dryRun:
             shutil.copy(srcPath, dstPath)
         if self.dryRun or self.loglevel >= DEBUG:
-            self.log('copy %s %s' % (srcPath, dstPath))
+            self.log('copy {0!s} {1!s}'.format(srcPath, dstPath))
 
 
 def main():

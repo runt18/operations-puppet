@@ -27,7 +27,7 @@ max_load = cpu_count() / 2.0
 while time() < end:
     one_minute_load = getloadavg()[0]
     if one_minute_load > max_load:
-        print("Load average:  %s" % one_minute_load)
+        print("Load average:  {0!s}".format(one_minute_load))
         print_hot_threads()
         sleep(50)
     sleep(10)

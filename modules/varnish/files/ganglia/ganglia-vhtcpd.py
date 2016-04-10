@@ -210,4 +210,4 @@ if __name__ == '__main__':
     descriptors = metric_init({})
     for d in descriptors:
         v = d['call_back'](d['name'])
-        print 'value for %s is %u' % (d['name'], v)
+        print 'value for {0!s} is {1:d}'.format(d['name'], v)

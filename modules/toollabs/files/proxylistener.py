@@ -56,7 +56,7 @@ def get_remote_user(remote_host, remote_port, local_port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((remote_host, 113))
 
-    request = u"%s,%s\n" % (remote_port, local_port)
+    request = u"{0!s},{1!s}\n".format(remote_port, local_port)
 
     s.send(request.encode("ascii"))
     resp = s.recv(256)
@@ -65,8 +65,7 @@ def get_remote_user(remote_host, remote_port, local_port):
     resp_parts = [r.strip() for r in resp.split(":")]
     if "USERID" not in resp_parts:
         # Some auth error has occured. Abort!
-        logging.log(logging.INFO, "Identd auth failed, sent %s got back %s" %
-                    (request.strip(), resp.strip()))
+        logging.log(logging.INFO, "Identd auth failed, sent {0!s} got back {1!s}".format(request.strip(), resp.strip()))
         return None
 
     return resp_parts[-1]
@@ -97,7 +96,7 @@ class RouteRequestHandler(SocketServer.StreamRequestHandler):
 
         toolname = user[len(projectprefix):]
 
-        redis_key = "prefix:%s" % toolname
+        redis_key = "prefix:{0!s}".format(toolname)
 
         command = self.rfile.readline().strip()
         route = self.rfile.readline().strip()

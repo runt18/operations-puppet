@@ -118,7 +118,7 @@ def main():
             return ''
         u, e = email.split('@')
         u = u.lstrip('<')
-        return '<%s at %s>' % (u, e.split('.')[0])
+        return '<{0!s} at {1!s}>'.format(u, e.split('.')[0])
 
     def get_proj_by_name(name):
         """return json response
@@ -151,26 +151,26 @@ def main():
         :param uploads: list of phab attachment id's
         :returns: json
         """
-        block = "**`%s`** replied via email on `%s`\n\n" % (name, date)
-        block += "`%s`\n\n" % (subject)
+        block = "**`{0!s}`** replied via email on `{1!s}`\n\n".format(name, date)
+        block += "`{0!s}`\n\n".format((subject))
 
         sane_body = []
         for l in body.splitlines():
             if l.strip() == '--':
                 sane_body.append('> ~~')
             else:
-                sane_body.append('> %s' % (l.strip(),))
+                sane_body.append('> {0!s}'.format(l.strip()))
 
         block += '\n'.join(sane_body)
 
         if uploads:
             block += '\n\n--------------------------\n'
             for ref in uploads:
-                block += "\n{%s}" % (ref,)
+                block += "\n{{{0!s}}}".format(ref)
         return external_user_comment(task, block)
 
     def mail2task(sender, src_addy, date, subject, body, project, security):
-        block = "**`%s`** //%s// created via email on `%s`\n\n" % (sender,
+        block = "**`{0!s}`** //{1!s}// created via email on `{2!s}`\n\n".format(sender,
                                                                    src_addy,
                                                                    date)
 
@@ -178,7 +178,7 @@ def main():
         block += '\n\n                  this task filed by anonymous email'
         project_info = get_proj_by_name(project)
         if not project_info['data']:
-            raise EmailParsingError("project %s does not exist" % (project))
+            raise EmailParsingError("project {0!s} does not exist".format((project)))
 
         # XXX: if we need direct security task filing this is where to do it
         # auxiliary contains any custom maniphest settings
@@ -254,7 +254,7 @@ def main():
         # https://docs.python.org/2/library/email.message.html
         if msg.is_multipart():
             for payload in msg.get_payload():
-                log('content type: %s' % (payload.get_content_type(),))
+                log('content type: {0!s}'.format(payload.get_content_type()))
                 if payload.get_content_type() == 'text/plain':
                     body = payload.get_payload()
                 elif payload.get_content_type() == 'multipart/alternative':
@@ -304,7 +304,7 @@ def main():
     stdin = sys.stdin.read()
 
     if save:
-        log('saving raw email to %s' % save)
+        log('saving raw email to {0!s}'.format(save))
         with open(save, 'w') as r:
             r.write(stdin)
 
@@ -328,7 +328,7 @@ def main():
     if 'debug' in defaults:
         src = src_addy.lower().strip()
         if src in defaults['debug']:
-            with open('/tmp/%s' % (src_addy + '.txt'), 'w') as r:
+            with open('/tmp/{0!s}'.format((src_addy + '.txt')), 'w') as r:
                 r.write(stdin)
 
     # does this email have a direct to task addresss
@@ -338,7 +338,7 @@ def main():
     routed_addresses = [a for a in address_routing.keys() if a in to_addresses]
 
     if dtask:
-        log('found direct task: %s' % (dtask,))
+        log('found direct task: {0!s}'.format(dtask))
         body, attached = extract_body_and_attached(msg)
         userinfo = phab.user.query(usernames=[username])[0]
 
@@ -354,7 +354,7 @@ def main():
 
         # extra check for address validity for this process
         if src_address.count('@') > 1:
-            error = 'invalid source address: %s' % (src_address,)
+            error = 'invalid source address: {0!s}'.format(src_address)
             raise EmailParsingError(error)
 
         # list of phid's for associated projects
@@ -394,7 +394,7 @@ def main():
         if userinfo.response:
             from email.mime.multipart import MIMEMultipart
             from email.mime.text import MIMEText
-            body += "\n\n#%s" % (address_routing[route_address],)
+            body += "\n\n#{0!s}".format(address_routing[route_address])
             # XXX TODO: handle MIME attachments for direct route tasks
             nmsg = MIMEMultipart()
             nmsg['From'] = src_addy
@@ -410,7 +410,7 @@ def main():
         # for payload in attached:
         #    uploads.append(extract_payload_and_upload(payload))
 
-        log('found routed address: %s' % (route_address,))
+        log('found routed address: {0!s}'.format(route_address))
         if '/' in address_routing[route_address]:
             project, security = address_routing[route_address].split('/')
         else:
@@ -438,14 +438,14 @@ if __name__ == '__main__':
     # errors we only respond directly for defined errors
     # otherwise swallow, return generic, and go for syslog
     except EmailStatusError as e:
-        print "%s\n\n%s" % (e, contact)
+        print "{0!s}\n\n{1!s}".format(e, contact)
         exit(1)
     except EmailParsingError as e:
-        syslog.syslog("EmailParsingError: %s" % (str(e)))
-        print "%s\n\n%s" % (e, contact)
+        syslog.syslog("EmailParsingError: {0!s}".format((str(e))))
+        print "{0!s}\n\n{1!s}".format(e, contact)
         sys.exit(1)
     except Exception as e:
         msg = 'Error parsing message'
-        syslog.syslog("%s: %s" % (msg, str(e)))
-        print "%s\n\n%s" % (msg, contact)
+        syslog.syslog("{0!s}: {1!s}".format(msg, str(e)))
+        print "{0!s}\n\n{1!s}".format(msg, contact)
         sys.exit(1)

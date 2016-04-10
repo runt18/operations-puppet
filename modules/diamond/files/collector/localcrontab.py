@@ -49,7 +49,7 @@ class LocalCrontabCollector(diamond.collector.Collector):
                 self.config['sudo_user']
             ] + command
 
-        self.log.debug('Running %s' % (' '.join(command)))
+        self.log.debug('Running {0!s}'.format((' '.join(command))))
         crontabs = subprocess.check_output(command).split("\n")
         crontabs = [c.strip() for c in crontabs]
         crontabs = [c for c in crontabs if c]

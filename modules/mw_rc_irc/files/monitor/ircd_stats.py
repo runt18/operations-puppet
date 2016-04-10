@@ -33,12 +33,12 @@ class IRCDStatsCollector(diamond.collector.Collector):
         try:
             irc.connect((self.config['server'], int(self.config['port'])))
             # making ircd happy with # of args
-            irc.send("USER %s %s %s :%s\n" % (self.config['user'],
+            irc.send("USER {0!s} {1!s} {2!s} :{3!s}\n".format(self.config['user'],
                                               self.config['user'],
                                               self.config['user'],
                                               self.config['user']))
 
-            irc.send("NICK %s\n" % (self.config['user'],))
+            irc.send("NICK {0!s}\n".format(self.config['user']))
             termout = self.recv_until(irc, 'End of /MOTD command')
             users = re.search("There\sare\s(\d+)\susers", termout)
             chans = re.search("(\d+)\s:channels\sformed", termout)

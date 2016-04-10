@@ -56,7 +56,7 @@ metric_defs = {
 
 def print_exception(custom_msg, exception):
     error_msg = custom_msg or "An error has occurred"
-    print "%s %s" % (error_msg, exception),
+    print "{0!s} {1!s}".format(error_msg, exception),
 
 
 class UpdateMetricThread(threading.Thread):

@@ -55,6 +55,6 @@ with io.open(fd, buffering=BLOCK_SIZE, encoding='utf8', errors='replace') as f:
     for line in f:
         for pattern, metric_name in patterns:
             if pattern in line:
-                stat = 'mw.errors.%s:1|c' % metric_name
+                stat = 'mw.errors.{0!s}:1|c'.format(metric_name)
                 sock.sendto(stat.encode('utf-8'), statsd_addr)
                 break

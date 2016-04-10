@@ -82,13 +82,13 @@ class Rsyncer(object):
     def do_rsync(self, src, dest, targets, dir_args):
         for targ in targets:
             command = ["/usr/bin/pgrep", "-u", "root",
-                       "-f", "%s::%s" % (targ, dest)]
+                       "-f", "{0!s}::{1!s}".format(targ, dest)]
             result = subprocess.call(command)
             if result != 1:  # already running or some error
                 continue
 
             command = (["/usr/bin/rsync"] + self.rsync_args + self.excludes +
-                       dir_args + [src, "%s::%s" % (targ, dest)])
+                       dir_args + [src, "{0!s}::{1!s}".format(targ, dest)])
             if self.dryrun:
                 print " ".join(command)
             else:

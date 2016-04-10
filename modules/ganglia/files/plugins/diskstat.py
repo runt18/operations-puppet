@@ -564,8 +564,7 @@ if __name__ == '__main__':
         for d in descriptors:
             v = d['call_back'](d['name'])
             if not options.quiet:
-                print ' %s: %s %s [%s]' % \
-                    (d['name'], v, d['units'], d['description'])
+                print ' {0!s}: {1!s} {2!s} [{3!s}]'.format(d['name'], v, d['units'], d['description'])
 
             if options.gmetric:
                 if d['value_type'] == 'uint':

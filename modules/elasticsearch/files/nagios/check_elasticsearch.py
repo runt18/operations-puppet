@@ -51,13 +51,13 @@ class Threshold(object):
         self.threshold = None
         self.percent = None
         self.FORMAT_RE = re.compile(
-            r'^(%s)?\s*([\d.]+)\s*(%%)?' % '|'.join(self.PREDICATES))
+            r'^({0!s})?\s*([\d.]+)\s*(%)?'.format('|'.join(self.PREDICATES)))
         self._parse(threshold)
 
     def breach(self, value, total=None):
         if total is None and self.percent is not None:
-            raise ValueError('threshold %r has percent but no total provided' %
-                             self.threshold_string)
+            raise ValueError('threshold {0!r} has percent but no total provided'.format(
+                             self.threshold_string))
         if total not in [None, 0]:
             value = float(value) / total
         return self.predicate(value, self.threshold)
@@ -65,12 +65,12 @@ class Threshold(object):
     def _parse(self, threshold):
         m = self.FORMAT_RE.match(threshold)
         if not m:
-            raise ValueError('unable to parse threshold: %r' % threshold)
+            raise ValueError('unable to parse threshold: {0!r}'.format(threshold))
         predicate, value, percent = m.groups()
         try:
             value = float(value)
         except ValueError:
-            raise ValueError('unable to parse as float: %r' % value)
+            raise ValueError('unable to parse as float: {0!r}'.format(value))
         self.predicate = self.PREDICATES.get(predicate, operator.eq)
         self.threshold = value
         self.percent = percent
@@ -79,7 +79,7 @@ class Threshold(object):
 def _format_health(health):
     out = []
     for k, v in health.iteritems():
-        health_item = '%s: %s' % (str(k).encode('utf8', 'ignore'),
+        health_item = '{0!s}: {1!s}'.format(str(k).encode('utf8', 'ignore'),
                                   str(v).encode('utf8', 'ignore'))
         out.append(health_item)
     return ', '.join(out)
@@ -92,25 +92,25 @@ def check_status(health):
 
 
 def log_critical(log):
-    print 'CRITICAL - elasticsearch %s' % log
+    print 'CRITICAL - elasticsearch {0!s}'.format(log)
 
 
 def log_ok(log):
-    print 'OK - elasticsearch %s' % log
+    print 'OK - elasticsearch {0!s}'.format(log)
 
 
 def check_shards_inactive(health, threshold):
     total_shards = 0
     inactive_shards = 0
     for s in 'relocating', 'initializing', 'unassigned':
-        inactive_shards += health['%s_shards' % s]
-        total_shards += health['%s_shards' % s]
+        inactive_shards += health['{0!s}_shards'.format(s)]
+        total_shards += health['{0!s}_shards'.format(s)]
     total_shards += health['active_shards']
     t = Threshold(threshold)
     if not t.breach(inactive_shards, total_shards):
         return EX_OK
 
-    log_critical('inactive shards %s threshold %s breach: %r' % (
+    log_critical('inactive shards {0!s} threshold {1!s} breach: {2!r}'.format(
                  inactive_shards, threshold, _format_health(health)))
     return EX_CRITICAL
 
@@ -135,13 +135,13 @@ def check_elasticsearch(options):
         response = fetch_url(cluster_health_url, options.timeout,
                              options.retries)
     except requests.exceptions.RequestException, e:
-        log_critical('%s error while fetching: %s' % (cluster_health_url, e))
+        log_critical('{0!s} error while fetching: {1!s}'.format(cluster_health_url, e))
         return EX_CRITICAL
 
     try:
         cluster_health = json.loads(response.content)
     except ValueError, e:
-        log_critical('%s error while decoding json: %s' % (
+        log_critical('{0!s} error while decoding json: {1!s}'.format(
             cluster_health_url, e))
         return EX_CRITICAL
 
@@ -154,7 +154,7 @@ def check_elasticsearch(options):
         if r != EX_OK:
             return r
 
-    log_ok('status %s: %s' % (cluster_health['cluster_name'],
+    log_ok('status {0!s}: {1!s}'.format(cluster_health['cluster_name'],
                               _format_health(cluster_health)))
     return EX_OK
 

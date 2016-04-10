@@ -109,7 +109,7 @@ def check_utilization(path):
         percent_allocated = blocks_allocated / stat.f_blocks * 100
         utilization = int(round(percent_allocated))
     else:
-        informative_message = 'not a mounted filesystem %s' % path
+        informative_message = 'not a mounted filesystem {0!s}'.format(path)
         _logger.error(informative_message)
         utilization = 0
     return utilization
@@ -129,7 +129,7 @@ def fetch_value(name):
         value = check_utilization(_tmp_fs)
     elif name == 'ocg_data_filesystem_utilization':
         value = check_utilization(_data_fs)
-    informative_message = '%s %s' % (name, value)
+    informative_message = '{0!s} {1!s}'.format(name, value)
     _logger.info(informative_message)
     return value
 
@@ -184,7 +184,7 @@ def metric_init(params):
     # jam _descriptions into awkward list of dicts for ganglia
     descriptors = []
     for name, desc in _descriptions.iteritems():
-        informative_message = '%s - %s' % (str(name), str(desc))
+        informative_message = '{0!s} - {1!s}'.format(str(name), str(desc))
         _logger.debug(informative_message)
         descriptors.append(desc.copy())
     return descriptors
@@ -214,4 +214,4 @@ if __name__ == '__main__':
     descriptors = metric_init(parsed_params)
     for d in descriptors:
         v = d['call_back'](d['name'])
-        print '%s is %s %s' % (d['name'], v, d['units'])
+        print '{0!s} is {1!s} {2!s}'.format(d['name'], v, d['units'])

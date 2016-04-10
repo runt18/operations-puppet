@@ -145,7 +145,7 @@ def parse_options():
         sys.exit(3)
 
     if len(args):
-        sys.stderr.write("Extraneous arguments: %s\n" % args)
+        sys.stderr.write("Extraneous arguments: {0!s}\n".format(args))
         sys.exit(3)
 
     # ps_mem.py options
@@ -307,14 +307,14 @@ def human(num, power="Ki", units=None):
         while num >= 1000:  # 4 digits
             num /= 1024.0
             power = powers[powers.index(power) + 1]
-        return "%.1f %sB" % (num, power)
+        return "{0:.1f} {1!s}B".format(num, power)
     else:
-        return "%.f" % ((num * 1024) / units)
+        return "{0:f}".format(((num * 1024) / units))
 
 
 def cmd_with_count(cmd, count):
     if count > 1:
-        return "%s (%u)" % (cmd, count)
+        return "{0!s} ({1:d})".format(cmd, count)
     else:
         return cmd
 
@@ -352,15 +352,15 @@ def show_shared_val_accuracy(possible_inacc, only_total=False):
     level = ("Warning", "Error")[only_total]
     if possible_inacc == -1:
         sys.stderr.write(
-            "%s: Shared memory is not reported by this system.\n" % level
+            "{0!s}: Shared memory is not reported by this system.\n".format(level)
         )
         sys.stderr.write(
             "Values reported will be too large, and totals are not reported\n"
         )
     elif possible_inacc == 0:
         sys.stderr.write(
-            "%s: Shared memory is not reported accurately by this system.\n" %
-            level)
+            "{0!s}: Shared memory is not reported accurately by this system.\n".format(
+            level))
         sys.stderr.write(
             "Values reported could be too large, and totals are not reported\n"
         )
@@ -447,13 +447,11 @@ def print_header():
 
 def print_memory_usage(sorted_cmds, shareds, count, total):
     for cmd in sorted_cmds:
-        sys.stdout.write("%9s + %9s = %9s\t%s\n" %
-                         (human(cmd[1] - shareds[cmd[0]]),
+        sys.stdout.write("{0:9!s} + {1:9!s} = {2:9!s}\t{3!s}\n".format(human(cmd[1] - shareds[cmd[0]]),
                           human(shareds[cmd[0]]), human(cmd[1]),
                           cmd_with_count(cmd[0], count[cmd[0]])))
     if have_pss:
-        sys.stdout.write("%s\n%s%9s\n%s\n" %
-                         ("-" * 33, " " * 24, human(total), "=" * 33))
+        sys.stdout.write("{0!s}\n{1!s}{2:9!s}\n{3!s}\n".format("-" * 33, " " * 24, human(total), "=" * 33))
 
 
 def verify_environment():

@@ -65,7 +65,7 @@ def get_udp2log_ports():
 
 def get_cmd(pid):
     """Get the command-line instantiation for a given process id"""
-    with open('/proc/%s/cmdline' % pid, 'rt') as f:
+    with open('/proc/{0!s}/cmdline'.format(pid), 'rt') as f:
         return f.read().split('\x00')
 
 

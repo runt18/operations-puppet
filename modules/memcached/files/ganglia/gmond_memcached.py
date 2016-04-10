@@ -93,7 +93,7 @@ class UpdateMetricThread(threading.Thread):
 
             sock.close()
         except socket.error, e:
-            print >>sys.stderr, "ERROR: %s" % e
+            print >>sys.stderr, "ERROR: {0!s}".format(e)
 
         for m in msg.split("\r\n"):
             d = m.split(" ")

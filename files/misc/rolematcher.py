@@ -38,7 +38,7 @@ class RoleMatcher(object):
 
     def __str__(self):
         if self.start is not None:
-            return '%s:%s-%s' % (self.role, self.start, self.end)
+            return '{0!s}:{1!s}-{2!s}'.format(self.role, self.start, self.end)
         else:
             return self.role
 
@@ -144,9 +144,9 @@ def fetch_url(url):
         response = urllib2.urlopen(req)
         data = response.readlines()
     except urllib2.HTTPError, e:
-        sys.stderr.write('HTTPError = %s' % e.code)
+        sys.stderr.write('HTTPError = {0!s}'.format(e.code))
     except urllib2.URLError, e:
-        sys.stderr.write('URLError = %s' % e.reason)
+        sys.stderr.write('URLError = {0!s}'.format(e.reason))
     except httplib.HTTPException, e:
         sys.stderr.write('HTTPException')
     except Exception:
@@ -154,7 +154,7 @@ def fetch_url(url):
         just to be sure that nothing falls through the cracks
         '''
         import traceback
-        sys.stderr.write('Generic exception: %s' % traceback.format_exc())
+        sys.stderr.write('Generic exception: {0!s}'.format(traceback.format_exc()))
     return data
 
 
@@ -173,12 +173,12 @@ def init():
                     prefix = determine_hostname_prefix(hostname)
                     suffix = determine_hostname_suffix(hostname)
                     if prefix in ['holmium']:
-                        if '%s-%s' % (dc, role) not in elements:
-                            matcher = RoleMatcher('%s_%s_elements' % (dc, role), 'holmium')
-                            elements['%s-%s' % (dc, role)] = True
+                        if '{0!s}-{1!s}'.format(dc, role) not in elements:
+                            matcher = RoleMatcher('{0!s}_{1!s}_elements'.format(dc, role), 'holmium')
+                            elements['{0!s}-{1!s}'.format(dc, role)] = True
                             matchers.append(matcher)
                     else:
-                        matcher = RoleMatcher('%s_%s_%s' % (dc, role, prefix), '%s([0-9]+)\.%s' % (prefix, suffix), start, end)
+                        matcher = RoleMatcher('{0!s}_{1!s}_{2!s}'.format(dc, role, prefix), '{0!s}([0-9]+)\.{1!s}'.format(prefix, suffix), start, end)
                         matchers.append(matcher)
     return matchers
 

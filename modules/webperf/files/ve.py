@@ -34,10 +34,10 @@ for meta in events.filter(schema='Edit'):
                 metric = 'load'
             else:
                 continue
-            timing = int(event['action.%s.timing' % action])
+            timing = int(event['action.{0!s}.timing'.format(action)])
             if timing < 100 or timing > 100000:
                 continue
-            stat = 'VisualEditor.%s:%s|ms' % (metric, timing)
+            stat = 'VisualEditor.{0!s}:{1!s}|ms'.format(metric, timing)
             sock.sendto(stat.encode('utf-8'), addr)
         except (ValueError, KeyError):
             continue

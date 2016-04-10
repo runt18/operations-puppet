@@ -30,4 +30,4 @@ class TcpConnStatesCollector(diamond.collector.Collector):
     def collect(self):
         conn_states = self.count_tcp_connection_states()
         for state, count in conn_states.items():
-            self.publish('connections.%s' % state, count)
+            self.publish('connections.{0!s}'.format(state), count)

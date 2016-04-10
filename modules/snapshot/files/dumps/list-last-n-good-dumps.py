@@ -414,7 +414,7 @@ class DumpList(object):
         if proc.returncode:
             raise DumpListError(
                 "command '" + command_string +
-                ("' failed with return code %s " % proc.returncode) +
+                ("' failed with return code {0!s} ".format(proc.returncode)) +
                 " and error '" + error + "'")
 
     def get_toplevelfiles(self):
@@ -537,7 +537,7 @@ def do_main():
         usage("Unknown option specified")
 
     if len(remainder):
-        usage("Unknown option specified: %s" % remainder[0])
+        usage("Unknown option specified: {0!s}".format(remainder[0]))
 
     for (opt, val) in options:
         if opt == "--configfile":

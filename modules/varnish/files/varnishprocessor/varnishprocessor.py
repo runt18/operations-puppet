@@ -87,7 +87,7 @@ class VarnishLogProcessor:
         buf = io.BytesIO()
         while self.stats:
             key, value = self.stats.popitem()
-            metric = '%s.%s:%s|c\n' % (self.key_prefix, key, value)
+            metric = '{0!s}.{1!s}:{2!s}|c\n'.format(self.key_prefix, key, value)
             buf.write(metric.encode('utf-8'))
         buf.seek(io.SEEK_SET)
         if self.statsd_server:

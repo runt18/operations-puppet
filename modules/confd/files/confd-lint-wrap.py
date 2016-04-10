@@ -23,7 +23,7 @@ error_dir = '/var/run/confd-template'
 
 
 def touch(fname, times=None):
-    log("updating error mtime on %s" % (fname,))
+    log("updating error mtime on {0!s}".format(fname))
     with open(fname, 'w+'):
         os.utime(fname, None)
 
@@ -54,12 +54,12 @@ def main():
     if not retcode and retcode != 0:
         retcode = 3
 
-    msg = "linting '%s' with %s (%ss)" % (' '.join(target),
+    msg = "linting '{0!s}' with {1!s} ({2!s}s)".format(' '.join(target),
                                           retcode,
                                           duration)
 
     if retcode:
-        error = 'failed %s %s' % (msg, err)
+        error = 'failed {0!s} {1!s}'.format(msg, err)
         touch(error_file)
         log(error)
         sys.exit(int(retcode))

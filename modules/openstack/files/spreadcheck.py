@@ -91,8 +91,8 @@ if __name__ == '__main__':
                                         config['classifier'])
     failed_classes = get_failed_classes(classification)
     if failed_classes:
-        print "CRITICAL: %s class instances not spread out enough" % \
-            ','.join(failed_classes)
+        print "CRITICAL: {0!s} class instances not spread out enough".format( \
+            ','.join(failed_classes))
         sys.exit(2)
     else:
         print "OK: All critical toollabs instances are spread out enough"

@@ -145,8 +145,7 @@ class RsyncFilesProcessor(object):
                     job = self.make_job(files)
                     if self.dryrun or self.verbose:
                         MirrorMsg.display(
-                            "adding job %s (size %d and filecount %d) to queue\n"
-                            % (job.job_id, file_du, file_count))
+                            "adding job {0!s} (size {1:d} and filecount {2:d}) to queue\n".format(job.job_id, file_du, file_count))
                     self.jqueue.add_to_job_queue(job)
                     file_du = 0
                     file_count = 0
@@ -156,8 +155,7 @@ class RsyncFilesProcessor(object):
         if file_count:
             if self.dryrun or self.verbose:
                 MirrorMsg.display(
-                    "adding job %s (size %d and filecount %d) to queue\n"
-                    % (job.job_id, file_du, file_count))
+                    "adding job {0!s} (size {1:d} and filecount {2:d}) to queue\n".format(job.job_id, file_du, file_count))
             self.jqueue.add_to_job_queue(self.make_job(files))
 
         self.jqueue.set_end_of_jobs()
@@ -185,9 +183,9 @@ class RsyncFilesProcessor(object):
                 else:
                     continue
             if self.dryrun:
-                MirrorMsg.display("job_id %s would have been completed\n" % job.job_id)
+                MirrorMsg.display("job_id {0!s} would have been completed\n".format(job.job_id))
             elif self.verbose:
-                MirrorMsg.display("job_id %s completed\n" % job.job_id)
+                MirrorMsg.display("job_id {0!s} completed\n".format(job.job_id))
 
             # update status of job in our todo queue
             j = self.jobs[job.job_id]
@@ -237,13 +235,13 @@ class DirDeleter(object):
                    self.job_list[job_id].check_if_failed()]
             if not len(ids):
                 if self.dryrun:
-                    MirrorMsg.display("Would do deletes for project %s\n" % project)
+                    MirrorMsg.display("Would do deletes for project {0!s}\n".format(project))
                 elif self.verbose:
-                    MirrorMsg.display("Doing deletes for project %s\n" % project)
+                    MirrorMsg.display("Doing deletes for project {0!s}\n".format(project))
                 self.do_deletes(project)
             else:
                 if self.verbose:
-                    MirrorMsg.display("No deletes for project %s\n" % project)
+                    MirrorMsg.display("No deletes for project {0!s}\n".format(project))
 
     def list_dirs_rsynced_for_proj(self, project):
         """get directories we synced for this project,
@@ -282,9 +280,9 @@ class DirDeleter(object):
         if self.dryrun or self.verbose:
             command_string = " ".join(command)
         if self.dryrun:
-            MirrorMsg.display("would run %s\n" % command_string)
+            MirrorMsg.display("would run {0!s}\n".format(command_string))
         elif self.verbose:
-            MirrorMsg.display("running %s\n" % command_string)
+            MirrorMsg.display("running {0!s}\n".format(command_string))
         return self.cmd.run_command(command, shell=False)
 
 
@@ -325,9 +323,9 @@ class Rsyncer(JobHandler):
         if self.dryrun or self.verbose:
             command_string = " ".join(command)
         if self.dryrun:
-            MirrorMsg.display("would run %s" % command_string)
+            MirrorMsg.display("would run {0!s}".format(command_string))
         elif self.verbose:
-            MirrorMsg.display("running %s" % command_string)
+            MirrorMsg.display("running {0!s}".format(command_string))
         if self.dryrun or self.verbose:
             MirrorMsg.display("with input:\n" + '\n'.join(files) + '\n', True)
         return self.cmd.run_command(command, shell=False,
@@ -380,8 +378,7 @@ class JobQueue(object):
         if not self._initial_worker_count:
             self._initial_worker_count = 1
         if self.verbose or self.dryrun:
-            MirrorMsg.display("about to start up %d workers:"
-                              % self._initial_worker_count)
+            MirrorMsg.display("about to start up {0:d} workers:".format(self._initial_worker_count))
         for i in xrange(0, self._initial_worker_count):
             worker = JobQueueHandler(self, self.handler, self.verbose, self.dryrun)
             worker.start()
@@ -410,7 +407,7 @@ class JobQueue(object):
             return False
         else:
             if self.verbose or self.dryrun:
-                MirrorMsg.display("retrieved from the job queue: %s\n" % job.job_id)
+                MirrorMsg.display("retrieved from the job queue: {0!s}\n".format(job.job_id))
             return job
 
     def notify_job_done(self, job):
@@ -461,10 +458,10 @@ class Command(object):
             command_string = command
         if self.dryrun or self.verbose:
             if self.dryrun:
-                MirrorMsg.display("would run %s\n" % command_string)
+                MirrorMsg.display("would run {0!s}\n".format(command_string))
                 return
             if self.verbose:
-                MirrorMsg.display("about to run %s\n" % command_string)
+                MirrorMsg.display("about to run {0!s}\n".format(command_string))
 
         if input_text:
             proc = Popen(command, shell=shell, stderr=PIPE, stdin=PIPE)
@@ -476,8 +473,7 @@ class Command(object):
             print output
 
         if proc.returncode:
-            MirrorMsg.warn("command '%s failed with return code %s and error %s\n"
-                           % (command_string, proc.returncode, error))
+            MirrorMsg.warn("command '{0!s} failed with return code {1!s} and error {2!s}\n".format(command_string, proc.returncode, error))
 
         # let the caller decide whether to bail or not
         return proc.returncode
@@ -498,7 +494,7 @@ class MirrorMsg(object):
         if continuation:
             print message,
         else:
-            print "Info: (%d) %s" % (os.getpid(), message),
+            print "Info: ({0:d}) {1!s}".format(os.getpid(), message),
         sys.stdout.flush()
 
     warn = staticmethod(warn)
@@ -595,15 +591,14 @@ class Mirror(object):
         if os.path.exists(dir_name):
             if not os.path.isdir(dir_name):
                 raise MirrorError(
-                    "target directory name %s is not a directory, giving up"
-                    % dir_name)
+                    "target directory name {0!s} is not a directory, giving up".format(dir_name))
         else:
             os.makedirs(dir_name)
 
 
 def usage(message=None):
     if message:
-        sys.stderr.write("%s\n" % message)
+        sys.stderr.write("{0!s}\n".format(message))
     usage_message = """
 Usage: python wmfdumpsmirror.py [--source_hostname dumpserver]
               [--dest_hostname]  -sourcedir dirpath

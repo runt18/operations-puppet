@@ -37,13 +37,13 @@ def main():
 
     # check what is the value of full and act upon it
     if full >= c:
-        print("CRITICAL: nf_conntrack is %d %% full" % full)
+        print("CRITICAL: nf_conntrack is {0:d} % full".format(full))
         sys.exit(2)
     elif full >= w and full < c:
-        print("WARNING: nf_conntrack is %d %% full" % full)
+        print("WARNING: nf_conntrack is {0:d} % full".format(full))
         sys.exit(1)
     elif full < w:
-        print("OK: nf_conntrack is %d %% full" % full)
+        print("OK: nf_conntrack is {0:d} % full".format(full))
         sys.exit(0)
     else:
         print("UNKNOWN: error reading nf_conntrack")
