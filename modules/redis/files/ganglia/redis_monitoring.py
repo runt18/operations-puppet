@@ -40,7 +40,9 @@ def metric_handler(name):
     return metric_handler.info.get(name, 0)
 
 
-def metric_init(params={}):
+def metric_init(params=None):
+    if params is None:
+        params = {}
     metric_handler.host = params.get("host", "127.0.0.1")
     metric_handler.port = int(params.get("port", 6379))
     metric_handler.password = params.get("password", None)

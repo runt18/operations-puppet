@@ -22,7 +22,9 @@ import requests  # Note: this isn't in the standard library
 class ZeroFetcher:
     # The core method that handles actual network requests from
     #   all the other methods (including the constructor!)
-    def _apiJSON(self, method, action, params={}):
+    def _apiJSON(self, method, action, params=None):
+        if params is None:
+            params = {}
         params.update({'action': action})
         resp = getattr(self.sess, method)(self.baseurl, params=params)
         if resp.status_code != requests.codes.ok:
