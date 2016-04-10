@@ -17,12 +17,12 @@ nagios_exits = {
 def nagios_exit(state, msg):
     if state not in nagios_exits:
         state = 'UNKNOWN'
-    print("HHVM_TC_SPACE {} {}".format(state, msg))
+    print("HHVM_TC_SPACE {0} {1}".format(state, msg))
     sys.exit(nagios_exits[state])
 
 
 def format_data(l):
-    return "; ".join(["{}: {}%".format(el[0], el[1]) for el in l])
+    return "; ".join(["{0}: {1}%".format(el[0], el[1]) for el in l])
 
 
 def main():
@@ -51,7 +51,7 @@ def main():
             nagios_exit('WARNING', format_data(WARNINGS))
         nagios_exit('OK', 'TC sizes are OK')
     except Exception as e:
-        nagios_exit('UNKNOWN', "Unhandled error: {}".format(e))
+        nagios_exit('UNKNOWN', "Unhandled error: {0}".format(e))
 
 if __name__ == '__main__':
     main()

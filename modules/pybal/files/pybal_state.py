@@ -22,7 +22,7 @@ class PyBalStateCollector(diamond.collector.Collector):
     def __init__(self, *args, **kwargs):
         super(PyBalStateCollector, self).__init__(*args, **kwargs)
         self.config['path_prefix'] = 'pybal'
-        self.base_url = 'http://localhost:{}{}'.format(
+        self.base_url = 'http://localhost:{0}{1}'.format(
             self.config['port'],
             self.pools_path)
         self.session = requests.Session()
@@ -53,7 +53,7 @@ class PyBalStateCollector(diamond.collector.Collector):
         total = len(data)
         if total == 0:
             return
-        self.publish('pools.{}.total'.format(name), total)
+        self.publish('pools.{0}.total'.format(name), total)
         acc = {u'pooled': 0, u'enabled': 0, u'up': 0}
         for k, v in data.items():
             del v['weight']
@@ -61,12 +61,12 @@ class PyBalStateCollector(diamond.collector.Collector):
                 if val:
                     acc[label] += 1
         for metric, count in acc.items():
-            path = 'pools.{}.{}'.format(name, metric)
+            path = 'pools.{0}.{1}'.format(name, metric)
             self.publish(path, count)
             self.publish(path + ".ratio", count / total)
 
     def collect(self):
         for pool in self.get_pools():
-            url = "{}/{}".format(self.base_url, pool)
+            url = "{0}/{1}".format(self.base_url, pool)
             r = self.session.get(url).json()
             self.collect_pool(pool, r)

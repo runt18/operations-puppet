@@ -18,7 +18,7 @@ class KubeAuth(requests.auth.AuthBase):
         self.token = token
 
     def __call__(self, r):
-        r.headers['Authorization'] = 'Bearer {}'.format(self.token)
+        r.headers['Authorization'] = 'Bearer {0}'.format(self.token)
         return r
 
 
@@ -53,7 +53,7 @@ class KubeClient(object):
 
     def get_service(self, name, namespace):
         resp = self.session.get(
-            self.url_for('/namespaces/{}/services/{}'.format(namespace, name)))
+            self.url_for('/namespaces/{0}/services/{1}'.format(namespace, name)))
         if resp.status_code != '200':
             raise ValueError("Found an unexpected response code %s when "
                              "searching for service %s" % (resp.status_code,
@@ -112,7 +112,7 @@ class KubeClient(object):
 
     def url_for(self, path):
         """Returns the full url for a specific path."""
-        return "{}/api/v1{}".format(self.base_url, path)
+        return "{0}/api/v1{1}".format(self.base_url, path)
 
     @staticmethod
     def _resp_to_service(data, action='ADDED'):
@@ -145,14 +145,14 @@ class Service(object):
 
     @property
     def url(self):
-        return "http://{}:{}".format(self.ipaddr, self.port)
+        return "http://{0}:{1}".format(self.ipaddr, self.port)
 
     @property
     def route(self):
         if not self._route:
             route = self.labels.get('toollabs-proxy-path')
             if route:
-                self._route = "/{}.*".format(route)
+                self._route = "/{0}.*".format(route)
             else:
                 self._route = self.default_route
         return self._route
@@ -162,7 +162,7 @@ class Service(object):
         if not route or route == self.default_route:
             self._route = self.default_route
         else:
-            self._route = "/{}.*".format(route)
+            self._route = "/{0}.*".format(route)
 
     def write(self, conn):
         # TODO: for now it's ok to use the tool name as a
@@ -192,7 +192,7 @@ class Service(object):
         r = self.route
         if r.startswith('/'):
             r = r[1:]
-        return "{}/{}/{}".format(self.namespace, self.name, r)
+        return "{0}/{1}/{2}".format(self.namespace, self.name, r)
 
 
 def main():
