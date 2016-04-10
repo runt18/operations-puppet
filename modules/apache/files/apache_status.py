@@ -72,7 +72,7 @@ Scoreboard = {
         'desc': 'Open slot with no current process',
     },
 }
-Scoreboard_bykey = dict([(v["key"], k) for (k, v) in Scoreboard.iteritems()])
+Scoreboard_bykey = {v["key"]: k for (k, v) in Scoreboard.iteritems()}
 
 SSL_REGEX = re.compile(
     '^(cache type:) (.*)(<b>)(?P<shared_mem>[0-9]+)(</b> bytes, current sessio'
@@ -105,7 +105,7 @@ def get_metrics():
 
     if (time.time() - METRICS['time']) > METRICS_CACHE_MAX:
 
-        metrics = dict([(k, 0) for k in Scoreboard.keys()])
+        metrics = {k: 0 for k in Scoreboard.keys()}
 
         # This is the short server-status. Lacks SSL metrics
         try:
