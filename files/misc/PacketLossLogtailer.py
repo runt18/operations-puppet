@@ -85,7 +85,7 @@ class PacketLossLogtailer(object):
         except Exception, e:
             self.lock.release()
             raise LogtailerParsingException(
-                "regmatch or contents failed with %s" % e)
+                "regmatch or contents failed with {0!s}".format(e))
         self.lock.release()
 
     def update_rolematchers(self):
@@ -161,7 +161,7 @@ class PacketLossLogtailer(object):
             if (duration < acceptable_duration_min or
                     duration > acceptable_duration_max):
                 msg = "time calculation problem - "
-                msg += "duration (%s) > 10%% away from period (%s)" % (
+                msg += "duration ({0!s}) > 10% away from period ({1!s})".format(
                     duration, self.period)
                 raise LogtailerStateException(msg)
         return duration
@@ -214,10 +214,10 @@ class PacketLossLogtailer(object):
                     'packet_loss_90th', packetloss_90th, units='%', tmax=960)
             else:
                 packetloss_ave_metric = GangliaMetricObject(
-                    'packet_loss_average:%s' % (role), packetloss_ave,
+                    'packet_loss_average:{0!s}'.format((role)), packetloss_ave,
                     units='%', tmax=960)
                 packetloss_90th_metric = GangliaMetricObject(
-                    'packet_loss_90th:%s' % (role), packetloss_90th,
+                    'packet_loss_90th:{0!s}'.format((role)), packetloss_90th,
                     units='%', tmax=960)
             metrics.append(packetloss_ave_metric)
             metrics.append(packetloss_90th_metric)

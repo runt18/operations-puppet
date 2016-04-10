@@ -133,12 +133,12 @@ class Login(django_auth_forms.AuthenticationForm):
                                            totp=token,
                                            user_domain_name=domain,
                                            auth_url=region)
-            msg = 'Login successful for user "%(username)s".' % \
-                {'username': username}
+            msg = 'Login successful for user "{username!s}".'.format(** \
+                {'username': username})
             LOG.info(msg)
         except exceptions.KeystoneAuthException as exc:
-            msg = 'Login failed for user "%(username)s".' % \
-                {'username': username}
+            msg = 'Login failed for user "{username!s}".'.format(** \
+                {'username': username})
             LOG.warning(msg)
             raise forms.ValidationError(exc)
         if hasattr(self, 'check_for_test_cookie'):  # Dropped in django 1.7

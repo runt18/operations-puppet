@@ -103,7 +103,7 @@ class NutcrackerCollector(diamond.collector.Collector):
         pools = stats['pools'].keys()
         for p in pools:
             for s in self.pool_stats:
-                metrics["pool.%s.%s" % (p, s)] = stats['pools'][p][s]
+                metrics["pool.{0!s}.{1!s}".format(p, s)] = stats['pools'][p][s]
 
         for stat, value in metrics.iteritems():
             self.publish(stat, value)

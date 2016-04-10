@@ -40,5 +40,5 @@ class SchedulerPoolFilter(filters.BaseHostFilter):
             LOG.debug("Host pool is unspecified, allowing all hosts.")
             return True
         else:
-            LOG.debug("Filtering according to the host pool: %s" % pool)
+            LOG.debug("Filtering according to the host pool: {0!s}".format(pool))
             return host_state.host in pool

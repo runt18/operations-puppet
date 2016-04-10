@@ -76,18 +76,18 @@ ob_install_dir = os.path.dirname(os.path.realpath(__file__))
 config_file = ob_install_dir + '/config.php'
 
 def get_config_data():
-    config_cmd = ['/usr/bin/env', 'php', '%s/config_to_json.php' % ob_install_dir]
+    config_cmd = ['/usr/bin/env', 'php', '{0!s}/config_to_json.php'.format(ob_install_dir)]
     try:
         proc = subprocess.Popen(config_cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
     except:
-        print "ERROR: Could not execute: %s" % config_cmd
+        print "ERROR: Could not execute: {0!s}".format(config_cmd)
         sys.exit(2)
     return proc.communicate()[0]
 
 try:
     with open(config_file) as f: pass
 except IOError as e:
-    print "ERROR: Oh dear... %s does not seem readable" % config_file
+    print "ERROR: Oh dear... {0!s} does not seem readable".format(config_file)
     sys.exit(2)
 
 try:
@@ -111,26 +111,26 @@ except:
 
 if purge_syslog:
     print "Purging syslog"
-    query = """DELETE FROM syslog WHERE timestamp <= DATE(NOW() - INTERVAL %s);""" % (interval)
+    query = """DELETE FROM syslog WHERE timestamp <= DATE(NOW() - INTERVAL {0!s});""".format((interval))
     #print query
     cursor.execute(query)
 
 
 if purge_eventlog:
     print "Purging eventlog"
-    query = """DELETE FROM eventlog WHERE datetime <= DATE(NOW() - INTERVAL %s);""" % (interval)
+    query = """DELETE FROM eventlog WHERE datetime <= DATE(NOW() - INTERVAL {0!s});""".format((interval))
     #print query
     cursor.execute(query)
 
 if purge_devices_perftimes:
     print "Purging devices_perftimes"
-    query = """DELETE FROM devices_perftimes WHERE from_unixtime(start) <= DATE(NOW() - INTERVAL %s);""" % (interval)
+    query = """DELETE FROM devices_perftimes WHERE from_unixtime(start) <= DATE(NOW() - INTERVAL {0!s});""".format((interval))
     #print query
     cursor.execute(query)
 
 if purge_perftimes:
     print "Purging perftimes"
-    query = """DELETE FROM perf_times WHERE from_unixtime(start) <= DATE(NOW() - INTERVAL %s);""" % (interval)
+    query = """DELETE FROM perf_times WHERE from_unixtime(start) <= DATE(NOW() - INTERVAL {0!s});""".format((interval))
     #print query
     cursor.execute(query)
 

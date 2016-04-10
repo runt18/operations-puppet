@@ -52,8 +52,7 @@ def dispatch_stats(name, stats):
     """Send metrics to StatsD."""
     for type, data in stats.items():
         for measure, value in data.items():
-            stat = ('frontend.assets.%s.%s.%s:%s|ms' %
-                    (type, measure, name, value))
+            stat = ('frontend.assets.{0!s}.{1!s}.{2!s}:{3!s}|ms'.format(type, measure, name, value))
             logging.info(stat)
             sock.sendto(stat.encode('utf-8'), addr)
 

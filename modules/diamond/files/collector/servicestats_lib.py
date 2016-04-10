@@ -187,7 +187,7 @@ def main():
             raise e
 
     for name in args.service:
-        print '%s stats: %r' % (name, p.stats(name))
+        print '{0!s} stats: {1!r}'.format(name, p.stats(name))
 
 
 if __name__ == '__main__':

@@ -388,7 +388,7 @@ class EndpointRequest(object):
                 self._check_json_chunk(d, v, prefix=p)
         elif isinstance(model, list):
             for i in range(len(model)):
-                p = prefix + '[%d]' % i
+                p = prefix + '[{0:d}]'.format(i)
                 self._check_json_chunk(data[i], model[i], prefix=p)
         else:
             check = self._verify(model)

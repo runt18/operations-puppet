@@ -30,13 +30,13 @@ defaults = {
 ganglia_name_prefix = "UDP_"
 
 udp_fields = {
-    "%sInDatagrams" % (ganglia_name_prefix): "UDP Packets Received",
-    "%sNoPorts" % (ganglia_name_prefix):
+    "{0!s}InDatagrams".format((ganglia_name_prefix)): "UDP Packets Received",
+    "{0!s}NoPorts".format((ganglia_name_prefix)):
         "UDP Packets to Unknown Port Received",
-    "%sInErrors" % (ganglia_name_prefix): "UDP Packet Receive Errors",
-    "%sOutDatagrams" % (ganglia_name_prefix): "UDP Packets Sent",
-    "%sRcvbufErrors" % (ganglia_name_prefix): "UDP Receive Buffer Errors",
-    "%sSndbufErrors" % (ganglia_name_prefix): "UDP Send Buffer Errors"
+    "{0!s}InErrors".format((ganglia_name_prefix)): "UDP Packet Receive Errors",
+    "{0!s}OutDatagrams".format((ganglia_name_prefix)): "UDP Packets Sent",
+    "{0!s}RcvbufErrors".format((ganglia_name_prefix)): "UDP Receive Buffer Errors",
+    "{0!s}SndbufErrors".format((ganglia_name_prefix)): "UDP Send Buffer Errors"
 }
 
 netstats = {}

@@ -53,7 +53,7 @@ class ApacheStatusSimpleCollector(diamond.collector.Collector):
         return urllib2.urlopen(self.config['url']).read()
 
     def pair_stat(self, stat, text):
-        return re.search('%s:(.+)' % (stat), text).group(1)
+        return re.search('{0!s}:(.+)'.format((stat)), text).group(1)
 
     def collect(self):
         status = self._get()

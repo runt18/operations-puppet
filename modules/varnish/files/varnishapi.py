@@ -437,13 +437,13 @@ class VarnishAPI:
             # Set Varnish instance name.
             i = self.lib.VSM_n_Arg(self.vsm, arg)
             if i <= 0:
-                self.error = "%s" % self.lib.VSM_Error(self.vsm).rstrip()
+                self.error = "{0!s}".format(self.lib.VSM_Error(self.vsm).rstrip())
                 return(i)
         elif op == "N":
             # Set VSM file.
             i = self.lib.VSM_N_Arg(self.vsm, arg)
             if i <= 0:
-                self.error = "%s" % self.lib.VSM_Error(self.vsm).rstrip()
+                self.error = "{0!s}".format(self.lib.VSM_Error(self.vsm).rstrip())
                 return(i)
             self.d_opt = 1
         return(None)
@@ -457,8 +457,8 @@ class VarnishStat(VarnishAPI):
         if len(opt) > 0:
             self.__setArg(opt)
         if self.lib.VSM_Open(self.vsm):
-            self.error = "Can't open VSM file (%s)" % self.lib.VSM_Error(
-                self.vsm).rstrip()
+            self.error = "Can't open VSM file ({0!s})".format(self.lib.VSM_Error(
+                self.vsm).rstrip())
         else:
             self.name = self.lva.VSM_Name(self.vsm)
 
@@ -560,10 +560,10 @@ class VarnishLog(VarnishAPI):
             # Specify the grouping.
             self.__g_arg = self.__VSLQ_Name2Grouping(arg)
             if self.__g_arg == -2:
-                self.error = "Ambiguous grouping type: %s" % (arg)
+                self.error = "Ambiguous grouping type: {0!s}".format((arg))
                 return(self.__g_arg)
             elif self.__g_arg < 0:
-                self.error = "Unknown grouping type: %s" % (arg)
+                self.error = "Unknown grouping type: {0!s}".format((arg))
                 return(self.__g_arg)
         # elif op == "P":
         # Not support PID(-P) option.
@@ -577,7 +577,7 @@ class VarnishLog(VarnishAPI):
             # default
             i = self.__VSL_Arg(op, arg)
             if i < 0:
-                self.error = "%s" % self.lib.VSL_Error(self.vsl)
+                self.error = "{0!s}".format(self.lib.VSL_Error(self.vsl))
             return(i)
 
     def __Setup(self):
@@ -585,8 +585,8 @@ class VarnishLog(VarnishAPI):
             c = self.lva.VSL_CursorFile(self.vsl, self.__r_arg, 0)
         else:
             if self.lib.VSM_Open(self.vsm):
-                self.error = "Can't open VSM file (%s)" % self.lib.VSM_Error(
-                    self.vsm).rstrip()
+                self.error = "Can't open VSM file ({0!s})".format(self.lib.VSM_Error(
+                    self.vsm).rstrip())
                 return(0)
             self.name = self.lva.VSM_Name(self.vsm)
 
@@ -599,14 +599,14 @@ class VarnishLog(VarnishAPI):
                 self.vsl, self.vsm, tail | self.defi.VSL_COPT_BATCH)
 
         if not c:
-            self.error = "Can't open log (%s)" % self.lva.VSL_Error(self.vsl)
+            self.error = "Can't open log ({0!s})".format(self.lva.VSL_Error(self.vsl))
             return(0)
         # query
         z = cast(c, c_void_p)
         self.vslq = self.lva.VSLQ_New(self.vsl, z, self.__g_arg, self.__q_arg)
         if not self.vslq:
-            self.error = "Query expression error:\n%s" % self.lib.VSL_Error(
-                self.vsl)
+            self.error = "Query expression error:\n{0!s}".format(self.lib.VSL_Error(
+                self.vsl))
             return(0)
 
         return(1)

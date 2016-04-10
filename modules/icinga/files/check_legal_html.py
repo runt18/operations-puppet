@@ -108,7 +108,7 @@ def main():
         count = len(re.findall(match, html, re.IGNORECASE))
         log(count, verbose)
         if not count:
-            print "%s html not found" % (match,)
+            print "{0!s} html not found".format(match)
             sys.exit(2)
 
     print "all html is present."

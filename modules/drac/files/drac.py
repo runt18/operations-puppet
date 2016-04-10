@@ -49,22 +49,22 @@ def main():
             for line in output:
                 line = line.strip()
                 print line
-            print "Successfully changed password for %s" % (server)
+            print "Successfully changed password for {0!s}".format((server))
             sys.exit(0)
         else:
-            print "Failed to change password for %s" % (server)
+            print "Failed to change password for {0!s}".format((server))
             sys.exit(1)
     if options.action:
-        command = "racadm serveraction %s" % (options.action)
+        command = "racadm serveraction {0!s}".format((options.action))
         output = run_command(server, username, password, command)
         if output:
             for line in output:
                 line = line.strip()
                 print line
-            print "Successfully ran %s on %s" % (options.action, server)
+            print "Successfully ran {0!s} on {1!s}".format(options.action, server)
             sys.exit(0)
         else:
-            print "Failed to run %s on %s" % (options.action, server)
+            print "Failed to run {0!s} on {1!s}".format(options.action, server)
             sys.exit(1)
     if options.nicnumber:
         command = "racadm getsysinfo"
@@ -93,12 +93,12 @@ def run_command(server, username, password, command):
         try:
             ssh.connect(server, username=username, password=password)
         except (paramiko.SSHException, socket.error):
-            print "Failed to connect to %s." % server
+            print "Failed to connect to {0!s}.".format(server)
             return
         stdin, stdout, stderr = ssh.exec_command(command)
         return stdout.readlines()
     except Exception:
-        print "Couldn't connect to %s" % (server)
+        print "Couldn't connect to {0!s}".format((server))
         return
 
 if __name__ == "__main__":

@@ -28,7 +28,7 @@ import sys
 def dir_exists(path):
     """Helper for argparse to check if a directory argument exists"""
     if not os.path.isdir(path):
-        raise argparse.ArgumentTypeError("directory %s does not exist" % path)
+        raise argparse.ArgumentTypeError("directory {0!s} does not exist".format(path))
     return path
 
 
@@ -63,11 +63,9 @@ def main():
     for checkme in glob.glob(os.path.join(args.dir, args.file_glob)):
         checkme_time = os.path.getmtime(checkme)
         if checkme_time < crit_time:
-            crit_out.append("CRITICAL: File %s is more than %s secs old!"
-                            % (checkme, args.crit_age))
+            crit_out.append("CRITICAL: File {0!s} is more than {1!s} secs old!".format(checkme, args.crit_age))
         elif checkme_time < warn_time:
-            warn_out.append("WARNING: File %s is more than %s secs old!"
-                            % (checkme, args.warn_age))
+            warn_out.append("WARNING: File {0!s} is more than {1!s} secs old!".format(checkme, args.warn_age))
 
     if crit_out:
         print "\n".join(crit_out)

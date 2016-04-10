@@ -30,7 +30,7 @@ class Whiner(object):
 
         print message
         if exc_text is not None:
-            print "\n%s\n" % exc_text
+            print "\n{0!s}\n".format(exc_text)
         if fatal:
             sys.exit(1)
 
@@ -141,25 +141,24 @@ class NovaAuth(object):
     def __init__(self, authfile):
         self.authinfo = {}
         if not os.path.exists(authfile):
-            Whiner.whine("authentication credentials file %s does not exist"
-                         % authfile)
+            Whiner.whine("authentication credentials file {0!s} does not exist".format(authfile))
         try:
             contents = open(authfile, "r").read()
         except:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             except_message = repr(traceback.format_exception(
                 exc_type, exc_value, exc_traceback))
-            Whiner.whine("failed to get credentials from file %s" %
-                         authfile, exc_text=except_message, fatal=True)
+            Whiner.whine("failed to get credentials from file {0!s}".format(
+                         authfile), exc_text=except_message, fatal=True)
         entries = contents.split("\n")
         for entry in entries:
             if not entry.strip() or entry[0] == '#':
                 continue
             if '=' not in entry:
-                Whiner.whine("ill-formed entry in auth creds file: %s" % entry)
+                Whiner.whine("ill-formed entry in auth creds file: {0!s}".format(entry))
                 continue
             if not entry.startswith('export OS_'):
-                Whiner.whine("ill-formed entry in auth creds file: %s" % entry)
+                Whiner.whine("ill-formed entry in auth creds file: {0!s}".format(entry))
                 continue
             name, value = entry[10:].split('=')
             value = value.strip('"')
@@ -318,10 +317,10 @@ def main():
         elif opt in ["-d", "--dryrun"]:
             dryrun = True
         else:
-            usage("Unknown option specified: <%s>" % opt)
+            usage("Unknown option specified: <{0!s}>".format(opt))
 
     if len(remainder) > 0:
-        usage("Unknown option(s) specified: <%s>" % remainder[0])
+        usage("Unknown option(s) specified: <{0!s}>".format(remainder[0]))
 
     nova_client = NovaClient(authfile)
     saltkeys = SaltKeys()
@@ -336,7 +335,7 @@ def main():
         if (canonicalize(bad_key, nova_client.auth.get_region())
                 not in good_instances):
             if not dryrun:
-                log("About to delete key %s" % bad_key)
+                log("About to delete key {0!s}".format(bad_key))
                 saltkeys.delete_bad_key(bad_key)
             else:
                 print "would delete", bad_key

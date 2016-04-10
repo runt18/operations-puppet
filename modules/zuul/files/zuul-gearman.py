@@ -41,7 +41,7 @@ class GearAdminRequestAction(argparse.Action):
 
         cmd = ' '.join([v.lower() for v in values])
         if cmd not in map_cmd_class:
-            parser.error("invalid command '%s'" % cmd)
+            parser.error("invalid command '{0!s}'".format(cmd))
         setattr(namespace, self.dest, cmd)
 
 
@@ -82,6 +82,6 @@ try:
     print req.response
     exit_code = 0
 except gear.TimeoutError:
-    print "Server timeout exceeded (%s)" % opts.server
+    print "Server timeout exceeded ({0!s})".format(opts.server)
 finally:
     exit(exit_code)

@@ -182,7 +182,7 @@ def deployment_server_init():
         # Clone repo from upstream or init repo with no upstream
         if not __salt__['file.directory_exists'](config['location'] + '/.git'):
             if config['upstream']:
-                cmd = '/usr/bin/git clone %s/.git %s' % (config['upstream'],
+                cmd = '/usr/bin/git clone {0!s}/.git {1!s}'.format(config['upstream'],
                                                          config['location'])
                 status = __salt__['cmd.retcode'](cmd, runas=deploy_user,
                                                  umask=002)
@@ -236,7 +236,7 @@ def deployment_server_init():
                 os.chown(post_checkout_path, deploy_uid, -1)
                 os.lchown(post_commit_path, deploy_uid, -1)
             else:
-                cmd = '/usr/bin/git init %s' % (config['location'])
+                cmd = '/usr/bin/git init {0!s}'.format((config['location']))
                 status = __salt__['cmd.retcode'](cmd, runas=deploy_user,
                                                  umask=002)
             if status != 0:
@@ -246,7 +246,7 @@ def deployment_server_init():
             __salt__['file.set_mode'](config['location'], 2775)
 
         # Set the repo name in the repo's config
-        cmd = 'git config deploy.repo-name %s' % repo
+        cmd = 'git config deploy.repo-name {0!s}'.format(repo)
         status = __salt__['cmd.retcode'](cmd, cwd=config['location'],
                                          runas=deploy_user, umask=002)
         if status != 0:
@@ -269,7 +269,7 @@ def deployment_server_init():
             deploy_group = config['deployment_repo_group']
 
         if deploy_group is not None:
-            cmd = 'chown -R %s:%s %s' % (deploy_user,
+            cmd = 'chown -R {0!s}:{1!s} {2!s}'.format(deploy_user,
                                          deploy_group,
                                          config['location'])
             status = __salt__['cmd.retcode'](cmd,
@@ -700,7 +700,7 @@ def _checkout_location(config, location, tag, reset=False, shadow=False):
 
     if reset:
         # User requested we hard reset the repo to the tag
-        cmd = '/usr/bin/git reset --hard tags/%s' % (tag)
+        cmd = '/usr/bin/git reset --hard tags/{0!s}'.format((tag))
         ret = __salt__['cmd.retcode'](cmd, location)
         if ret != 0:
             return 20
@@ -714,7 +714,7 @@ def _checkout_location(config, location, tag, reset=False, shadow=False):
             return 0
 
     # Checkout to the tag requested by the deployment.
-    cmd = '/usr/bin/git checkout --force --quiet tags/%s' % (tag)
+    cmd = '/usr/bin/git checkout --force --quiet tags/{0!s}'.format((tag))
     ret = __salt__['cmd.retcode'](cmd, location)
     if ret != 0:
         return 30

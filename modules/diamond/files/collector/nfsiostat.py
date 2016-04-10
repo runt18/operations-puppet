@@ -466,7 +466,7 @@ class NfsiostatCollector(diamond.collector.Collector):
         for mount, info in stats.iteritems():
             nfs_server = info['export'].split(':')[0].split('.')[0].strip()
             nfs_server_ops = round(float(info['ops']), 2)
-            nfs_server_ops_name = '%s' % (nfs_server,)
+            nfs_server_ops_name = '{0!s}'.format(nfs_server)
             nfs_ops[nfs_server_ops_name] = nfs_server_ops
 
         for name, value in nfs_ops.iteritems():
@@ -486,7 +486,7 @@ class NfsiostatCollector(diamond.collector.Collector):
                     if k in spec_attr:
                         pass
 
-                    name = "mounts.%s.%s.%s" % (mount, a, k)
+                    name = "mounts.{0!s}.{1!s}.{2!s}".format(mount, a, k)
                     value = round(float(v), 2)
                     dvalue = self.delta(name, value)
 
@@ -494,7 +494,7 @@ class NfsiostatCollector(diamond.collector.Collector):
                     # handle some special values as a per op value
                     if k == 'ops':
                         for sa in spec_attr:
-                            sa_name = '%s_%s_avg' % (name, sa)
+                            sa_name = '{0!s}_{1!s}_avg'.format(name, sa)
                             if dvalue == 0:
                                 sa_per = 0
                             else:

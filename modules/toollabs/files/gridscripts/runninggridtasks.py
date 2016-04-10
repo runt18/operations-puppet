@@ -21,7 +21,7 @@ import yaml
 from datetime import datetime
 
 if len(sys.argv) == 1:
-    print("Usage: %s hostname [hostname ...]" % sys.argv[0])
+    print("Usage: {0!s} hostname [hostname ...]".format(sys.argv[0]))
     sys.exit(1)
 
 

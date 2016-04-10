@@ -106,7 +106,7 @@ if __name__ == '__main__':
     if not _is_valid_hostname(ec2id_name):
         print 'Invalid hostname', ec2id_name
         sys.exit(-1)
-    query = '(&(objectclass=puppetClient)(associatedDomain=%s))' % (ec2id_name)
+    query = '(&(objectclass=puppetClient)(associatedDomain={0!s}))'.format((ec2id_name))
     base = 'ou=hosts,dc=wikimedia,dc=org'
     result = ldapConn.search_s(base, ldap.SCOPE_SUBTREE, query)
     if result:

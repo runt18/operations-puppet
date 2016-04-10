@@ -29,7 +29,7 @@ def register(port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         sock.connect((proxy, 8282))
-        sock.sendall("register\n.*\nhttp://%s:%u\n" % (current_ip, port))
+        sock.sendall("register\n.*\nhttp://{0!s}:{1:d}\n".format(current_ip, port))
         res = sock.recv(1024)
         if res != 'ok':
             sys.stderr.write('port registration failed!')

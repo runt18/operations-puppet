@@ -188,7 +188,7 @@ def dispatch_stat(*args):
     args = list(args)
     value = args.pop()
     name = '.'.join(arg.replace(' ', '_') for arg in args)
-    stat = '%s:%s|ms' % (name, value)
+    stat = '{0!s}:{1!s}|ms'.format(name, value)
     sock.sendto(stat.encode('utf-8'), addr)
 
 

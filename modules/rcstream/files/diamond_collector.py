@@ -30,7 +30,7 @@ class RCStreamCollector(diamond.collector.Collector):
     def get_backend_stats(self, backend, timeout=2):
         if ':' not in backend:
             backend = '127.0.0.1:' + backend  # assume it's a port number.
-        url = 'http://%s/rcstream_status' % backend
+        url = 'http://{0!s}/rcstream_status'.format(backend)
         resp = urllib2.urlopen(url, timeout=timeout)
         return json.loads(resp.read())
 

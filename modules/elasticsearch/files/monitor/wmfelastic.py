@@ -195,7 +195,7 @@ class WMFElasticCollector(diamond.collector.Collector):
         return config
 
     def _get(self, path):
-        url = 'http://%s:%i/%s' % (self.config['host'],
+        url = 'http://{0!s}:{1:d}/{2!s}'.format(self.config['host'],
                                    self.config['port'],
                                    path)
         response = urllib2.urlopen(url, timeout=3)

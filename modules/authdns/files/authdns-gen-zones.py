@@ -88,13 +88,11 @@ def main():
             template = template_env.get_template(filename)
             output = template.render(context)
         except jinja2.exceptions.TemplateSyntaxError, exc:
-            print 'Skipping zone %s, syntax error on line %d: %s' % \
-                  (filename, exc.lineno, exc.message)
+            print 'Skipping zone {0!s}, syntax error on line {1:d}: {2!s}'.format(filename, exc.lineno, exc.message)
             errors = True
             continue
         except jinja2.exceptions.TemplateError, exc:
-            print 'Skipping zone %s, could not parse: %s' % \
-                  (filename, str(exc))
+            print 'Skipping zone {0!s}, could not parse: {1!s}'.format(filename, str(exc))
             errors = True
             continue
 

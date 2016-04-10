@@ -62,7 +62,7 @@ except:
             return type(self)(self.default_factory,
                               copy.deepcopy(self.items()))
         def __repr__(self):
-            return 'defaultdict(%s, %s)' % (self.default_factory,
+            return 'defaultdict({0!s}, {1!s})'.format(self.default_factory,
                                             dict.__repr__(self))
 
 import MySQLdb

@@ -100,7 +100,7 @@ def executeQuery(instanceHost, instancePort,
                 instanceHost, str(database), str(rows))
 
     except _mysql.Error, e:
-        print "Error %d: %s" % (e.args[0], e.args[1])
+        print "Error {0:d}: {1!s}".format(e.args[0], e.args[1])
         sys.exit(1)
 
     finally:

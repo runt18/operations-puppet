@@ -40,14 +40,14 @@ r = requests.get('https://gerrit.wikimedia.org/r/changes/?'
                  'q=status:merged+project:%s&n=1&o=CURRENT_REVISION' % repo)
 data = json.loads(r.text[4:])
 if not data:
-    print('Error, could not find any changes in %s.' % repo)
+    print('Error, could not find any changes in {0!s}.'.format(repo))
     sys.exit(1)
 change = data[0]
 change_number = change['_number']
 patchset = change['revisions'][change['current_revision']]['_number']
-print('Going to test %s@%s,%s' % (repo, change_number, patchset))
+print('Going to test {0!s}@{1!s},{2!s}'.format(repo, change_number, patchset))
 subprocess.call(['zuul', 'enqueue',
                  '--trigger', 'gerrit',
                  '--pipeline', pipeline,
                  '--project', repo,
-                 '--change', '%s,%s' % (change_number, patchset)])
+                 '--change', '{0!s},{1!s}'.format(change_number, patchset)])

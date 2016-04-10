@@ -167,7 +167,7 @@ class Service(object):
     def write(self, conn):
         # TODO: for now it's ok to use the tool name as a
         # prefix; in the future we'll need to probably refine this a bit
-        key = "prefix:%s" % self.name
+        key = "prefix:{0!s}".format(self.name)
         log.info("Service %s is %s", self, self.action)
         if self.action == 'ADDED':
             conn.hset(key, self.route, self.url)

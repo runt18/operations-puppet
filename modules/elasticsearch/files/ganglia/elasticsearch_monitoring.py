@@ -536,7 +536,7 @@ def metric_init(params):
 
     def main_path_transformer(data, path):
         node = data['stats']['nodes'].keys()[0]
-        return 'nodes.%(node)s.%(path)s' % {'node': node, 'path': path}
+        return 'nodes.{node!s}.{path!s}'.format(**{'node': node, 'path': path})
     stat_groups = 'thread_pool,process,transport,fs,jvm,indices'
     main_url = '{0}/_nodes/_local/stats/{1}'.format(host, stat_groups)
     main_result = {
@@ -595,5 +595,5 @@ if __name__ == '__main__':
     while True:
         for d in descriptors:
             v = d['call_back'](d['name'])
-            print 'value for %s is %s' % (d['name'], str(v))
+            print 'value for {0!s} is {1!s}'.format(d['name'], str(v))
         sleep(10)

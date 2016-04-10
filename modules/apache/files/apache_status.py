@@ -436,9 +436,9 @@ if __name__ == '__main__':
             for d in descriptors:
                 v = d['call_back'](d['name'])
                 if d['name'] == NAME_PREFIX + "rps":
-                    print 'value for %s is %.4f' % (d['name'], v)
+                    print 'value for {0!s} is {1:.4f}'.format(d['name'], v)
                 else:
-                    print 'value for %s is %s' % (d['name'], v)
+                    print 'value for {0!s} is {1!s}'.format(d['name'], v)
             time.sleep(15)
     except KeyboardInterrupt:
         os._exit(1)

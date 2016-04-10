@@ -119,4 +119,4 @@ if __name__ == "__main__":
     desc = metric_init({"host": "127.0.0.1"})
     for d in desc:
         v = d['call_back'](d['name'])
-        print 'value for %s is %f' % (d['name'], v)
+        print 'value for {0!s} is {1:f}'.format(d['name'], v)

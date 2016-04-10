@@ -11,7 +11,7 @@ import syslog
 
 
 def die(msg):
-    error = "[invalid]: %s" % (msg,)
+    error = "[invalid]: {0!s}".format(msg)
     print >>sys.stderr, error
     sys.exit(1)
 
@@ -63,7 +63,7 @@ def main():
             socket.gethostbyname_ex(server['host'])
             eligible_servers.append(server)
         except Exception as e:
-            die('%s %s' % (l, e))
+            die('{0!s} {1!s}'.format(l, e))
 
     # We assume empty pools are errant
     if not eligible_servers:

@@ -14,15 +14,14 @@ UNKNOWN = 3
 
 def check_url(url, client_id, api_key):
     t = urllib.urlopen(
-        '%s?client=%s&key=%s&appver=%s&pver=%s&url=%s' %
-        (GSB_URL, client_id, api_key, APP_VERSION, PROTOCOL_VERSION, url))
+        '{0!s}?client={1!s}&key={2!s}&appver={3!s}&pver={4!s}&url={5!s}'.format(GSB_URL, client_id, api_key, APP_VERSION, PROTOCOL_VERSION, url))
     status = t.getcode()
     if status == 200:
-        return (CRITICAL, '%s marked as %s' % (url, t.read()))
+        return (CRITICAL, '{0!s} marked as {1!s}'.format(url, t.read()))
     elif status == 204:
-        return (OK, '%s is OK' % url)
+        return (OK, '{0!s} is OK'.format(url))
     else:
-        return (UNKNOWN, 'Status: %s' % status)
+        return (UNKNOWN, 'Status: {0!s}'.format(status))
 
 
 def handle_args():
@@ -31,7 +30,7 @@ def handle_args():
     parser.add_argument('-v',
                         '--version',
                         action='version',
-                        version='%s' % APP_VERSION)
+                        version='{0!s}'.format(APP_VERSION))
     parser.add_argument(
         'client_id',
         help='Client ID as specified by developers console',

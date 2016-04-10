@@ -115,7 +115,7 @@ class UpdateJenkinsThread(threading.Thread):
       if name in self.metrics:
         try:
           self._metrics_lock.acquire()
-          logging.debug('metric: %s = %s' % (name, self.metrics[name]))
+          logging.debug('metric: {0!s} = {1!s}'.format(name, self.metrics[name]))
           return self.metrics[name]
         finally:
           self._metrics_lock.release()
@@ -130,7 +130,7 @@ class UpdateJenkinsThread(threading.Thread):
       if name in self.settings:
         try:
           self._settings_lock.acquire()
-          logging.debug('setting: %s = %s' % (name, self.settings[name]))
+          logging.debug('setting: {0!s} = {1!s}'.format(name, self.settings[name]))
           return self.settings[name]
         finally:
           self._settings_lock.release()

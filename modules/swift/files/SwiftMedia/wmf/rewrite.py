@@ -90,18 +90,18 @@ class _WMFRewriteContext(WSGIContext):
                         if(lang in ['mediawiki']):
                             lang = 'www'
                             proj = 'mediawiki'
-                    hostname = '%s.%s.org' % (lang, proj)
+                    hostname = '{0!s}.{1!s}.org'.format(lang, proj)
                     if(proj == 'wikipedia' and lang == 'sources'):
                         #yay special case
                         hostname = 'wikisource.org'
                     # ok, replace the URL with just the part starting with thumb/
                     # take off the first two parts of the path (eg /wikipedia/commons/); make sure the string starts with a /
-                    encodedurl = 'http://%s/w/thumb_handler.php/%s' % (hostname, match.group('path'))
+                    encodedurl = 'http://{0!s}/w/thumb_handler.php/{1!s}'.format(hostname, match.group('path'))
                     # add in the X-Original-URI with the swift got (minus the hostname)
                     opener.addheaders.append(('X-Original-URI', list(urlparse.urlsplit(reqorig.url))[2]))
                 else:
                     # ASSERT this code should never be hit since only thumbs should call the 404 handler
-                    self.logger.warn("non-thumb in 404 handler! encodedurl = %s" % encodedurl)
+                    self.logger.warn("non-thumb in 404 handler! encodedurl = {0!s}".format(encodedurl))
                     resp = webob.exc.HTTPNotFound('Unexpected error')
                     return resp
             else:
@@ -110,9 +110,9 @@ class _WMFRewriteContext(WSGIContext):
                 if match:
                     proj = match.group('proj')
                     lang = match.group('lang')
-                    self.logger.warn("sitelang match has proj %s lang %s encodedurl %s" % (proj, lang, encodedurl))
+                    self.logger.warn("sitelang match has proj {0!s} lang {1!s} encodedurl {2!s}".format(proj, lang, encodedurl))
                 else:
-                    self.logger.warn("no sitelang match on encodedurl: %s" % encodedurl)
+                    self.logger.warn("no sitelang match on encodedurl: {0!s}".format(encodedurl))
 
             # ok, call the encoded url
             upcopy = opener.open(encodedurl)
@@ -134,8 +134,8 @@ class _WMFRewriteContext(WSGIContext):
             resp = CopiedHTTPError()
             return resp
         except urllib2.URLError, error:
-            msg = 'There was a problem while contacting the image scaler: %s' % \
-                  error.reason
+            msg = 'There was a problem while contacting the image scaler: {0!s}'.format( \
+                  error.reason)
             resp = webob.exc.HTTPServiceUnavailable(msg)
             return resp
 
@@ -274,8 +274,8 @@ class _WMFRewriteContext(WSGIContext):
                     headers = {'Content-Type': 'application/octet-stream'}
                     resp = webob.Response(headers=headers, body="OK\n")
                 elif what == 'backend':
-                    req.host = '127.0.0.1:%s' % self.bind_port
-                    req.path_info = "/v1/%s/monitoring/backend" % self.account
+                    req.host = '127.0.0.1:{0!s}'.format(self.bind_port)
+                    req.path_info = "/v1/{0!s}/monitoring/backend".format(self.account)
 
                     app_iter = self._app_call(env)
                     status = self._get_status_int()
@@ -283,7 +283,7 @@ class _WMFRewriteContext(WSGIContext):
 
                     resp = webob.Response(status=status, headers=headers, app_iter=app_iter)
                 else:
-                    resp = webob.exc.HTTPNotFound('Monitoring type not found "%s"' % (req.path))
+                    resp = webob.exc.HTTPNotFound('Monitoring type not found "{0!s}"'.format((req.path)))
                 return resp(env, start_response)
 
         if match is None:
@@ -295,8 +295,8 @@ class _WMFRewriteContext(WSGIContext):
                 if not path:
                     path = 'index.html'
 
-                req.host = '127.0.0.1:%s' % self.bind_port
-                req.path_info = "/v1/%s/root/%s" % (self.account, path)
+                req.host = '127.0.0.1:{0!s}'.format(self.bind_port)
+                req.path_info = "/v1/{0!s}/root/{1!s}".format(self.account, path)
 
                 app_iter = self._app_call(env)
                 status = self._get_status_int()
@@ -308,19 +308,19 @@ class _WMFRewriteContext(WSGIContext):
         # Internally rewrite the URL based on the regex it matched...
         if match:
             # Get the per-project "conceptual" container name, e.g. "<proj><lang><repo><zone>"
-            container = "%s-%s-%s-%s" % (proj, lang, repo, zone)
+            container = "{0!s}-{1!s}-{2!s}-{3!s}".format(proj, lang, repo, zone)
             # Add 2-digit shard to the container if it is supposed to be sharded.
             # We may thus have an "actual" container name like "<proj><lang><repo><zone>.<shard>"
             if container in self.shard_container_list:
-                container += ".%s" % shard
+                container += ".{0!s}".format(shard)
 
             # Save a url with just the account name in it.
-            req.path_info = "/v1/%s" % (self.account)
+            req.path_info = "/v1/{0!s}".format((self.account))
             port = self.bind_port
-            req.host = '127.0.0.1:%s' % port
+            req.host = '127.0.0.1:{0!s}'.format(port)
             url = req.url[:]
             # Create a path to our object's name.
-            req.path_info = "/v1/%s/%s/%s" % (self.account, container, urllib2.unquote(obj))
+            req.path_info = "/v1/{0!s}/{1!s}/{2!s}".format(self.account, container, urllib2.unquote(obj))
             #self.logger.warn("new path is %s" % req.path_info)
 
             # do_start_response just remembers what it got called with,
@@ -340,17 +340,17 @@ class _WMFRewriteContext(WSGIContext):
                     resp = self.handle404(reqorig, url, container, obj)
                     return resp(env, start_response)
                 else:
-                    resp = webob.exc.HTTPNotFound('File not found: %s' % req.path)
+                    resp = webob.exc.HTTPNotFound('File not found: {0!s}'.format(req.path))
                     return resp(env, start_response)
             elif status == 401:
                 # if the Storage URL is invalid or has expired we'll get this error.
                 resp = webob.exc.HTTPUnauthorized('Token may have timed out')
                 return resp(env, start_response)
             else:
-                resp = webob.exc.HTTPNotImplemented('Unknown Status: %s' % (status))
+                resp = webob.exc.HTTPNotImplemented('Unknown Status: {0!s}'.format((status)))
                 return resp(env, start_response)
         else:
-            resp = webob.exc.HTTPNotFound('Regexp failed to match URI: "%s"' % (req.path))
+            resp = webob.exc.HTTPNotFound('Regexp failed to match URI: "{0!s}"'.format((req.path)))
             return resp(env, start_response)
 
 

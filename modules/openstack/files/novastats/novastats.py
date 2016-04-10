@@ -5,7 +5,7 @@ import subprocess
 
 
 def checkSalt(ec2ID, site="eqiad"):
-    hostname = "%s.%s.wmflabs" % (ec2ID, site)
+    hostname = "{0!s}.{1!s}.wmflabs".format(ec2ID, site)
     args = ["salt", hostname, "test.ping"]
     r = subprocess.check_output(args)
     if r.find("No minions matched the target") >= 0:
@@ -17,7 +17,7 @@ def checkSalt(ec2ID, site="eqiad"):
 
 
 def checkMatch(ec2ID, needle, haystackPath, site="eqiad"):
-    hostname = "%s.%s.wmflabs" % (ec2ID, site)
+    hostname = "{0!s}.{1!s}.wmflabs".format(ec2ID, site)
     args = ["salt", hostname, "file.search", haystackPath, needle]
     try:
         r = subprocess.check_output(args)
@@ -31,7 +31,7 @@ def checkMatch(ec2ID, needle, haystackPath, site="eqiad"):
 
 
 def checkMatchSsh(name, needle, haystackPath):
-    hostname = "%s.%s.wmflabs" % (ec2ID, site)
+    hostname = "{0!s}.{1!s}.wmflabs".format(ec2ID, site)
     args = ["salt", hostname, "file.search", haystackPath, needle]
     try:
         r = subprocess.check_output(args)
@@ -58,7 +58,7 @@ def instanceDetails(instanceID):
             value = detailFields[2].strip()
             detailDict[key] = value
     except subprocess.CalledProcessError:
-        print "Unable to 'nova show' %s" % instanceID
+        print "Unable to 'nova show' {0!s}".format(instanceID)
         return False
 
     return detailDict

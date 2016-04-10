@@ -59,7 +59,7 @@ class MinimalPuppetAgentCollector(diamond.collector.Collector):
                       ]
         proc = subprocess.Popen(check_path, stdout=subprocess.PIPE)
         out, _ = proc.communicate()
-        return out.strip() == '/bin/cat %s' % self.config['yaml_path']
+        return out.strip() == '/bin/cat {0!s}'.format(self.config['yaml_path'])
 
     def _get_summary(self):
 

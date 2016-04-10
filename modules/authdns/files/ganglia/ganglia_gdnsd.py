@@ -165,8 +165,8 @@ def metric_init(params):
     for category in raw:
         try:
             for metric in raw[category]:
-                name = str("%s_%s_%s" % (CONF['prefix'], category, metric))
-                desc = str("%s_%s" % (category, metric))
+                name = str("{0!s}_{1!s}_{2!s}".format(CONF['prefix'], category, metric))
+                desc = str("{0!s}_{1!s}".format(category, metric))
                 descriptors.append(build_desc(skel, {
                     'name': name,
                     'description': DESCRIPTIONS.get(desc, desc),
@@ -201,10 +201,10 @@ def metric_config(params):
 
     for desc in descriptors:
         out += """
-        metric {
-            name = "%(name)s"
-            title = "%(description)s"
-        }""" % desc
+        metric {{
+            name = "{name!s}"
+            title = "{description!s}"
+        }}""".format(**desc)
 
     out += """
     }"""
@@ -224,4 +224,4 @@ if __name__ == '__main__':
     else:
         for d in metric_init({}):
             d['value'] = d['call_back'](d['name'])
-            print ' %(name)s: %(units)s %(value)s [%(description)s]' % d
+            print ' {name!s}: {units!s} {value!s} [{description!s}]'.format(**d)

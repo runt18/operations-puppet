@@ -72,7 +72,7 @@ class ExtendedEximCollector(diamond.collector.Collector):
         else:
             command = [self.config['sudo_cmd'], "-u", self.config['sudo_user'],
                        "cat", file]
-            self.log.debug('Running %s' % (' '.join(command)))
+            self.log.debug('Running {0!s}'.format((' '.join(command))))
             try:
                 return subprocess.check_output(
                     command,
@@ -93,7 +93,7 @@ class ExtendedEximCollector(diamond.collector.Collector):
                 '-u',
                 self.config['sudo_user']
             ] + command
-        self.log.debug('Running %s' % (' '.join(command)))
+        self.log.debug('Running {0!s}'.format((' '.join(command))))
         queue = subprocess.check_output(command)
 
         # remove empty lines

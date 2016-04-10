@@ -30,7 +30,7 @@ with open("jobs.yaml", 'r') as stream:
     Due to an upcoming server reboot, the following jobs will be killed
 tomorrow at 15:00 UTC:
 
-%s
+{0!s}
 
    These jobs will not be automatically restarted. If you restart the jobs
 manually before the upcoming reboot, they will restart on a different host
@@ -45,9 +45,9 @@ https://wikitech.wikimedia.org/wiki/Virt_node_upgrade_schedule
 
     Thank you, and sorry for the inconvenience.
 
-- your friendly labs admins""" % "\n".join(joblist)
+- your friendly labs admins""".format("\n".join(joblist))
 
-        victim = "%s@tools.wmflabs.org" % tool
+        victim = "{0!s}@tools.wmflabs.org".format(tool)
         print victim
 
         p = subprocess.Popen(['mail', '-r', 'abogott@wikimedia.org', '-s',

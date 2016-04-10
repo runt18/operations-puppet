@@ -53,7 +53,7 @@ class NfsdCollector(diamond.collector.Collector):
         ss = '/bin/ss -t -n -o state established'
         ss_filter = "'( dport = :2049 or sport = :2049 )'"
         try:
-            ss_clients = runBash("%s %s" % (ss, ss_filter))
+            ss_clients = runBash("{0!s} {1!s}".format(ss, ss_filter))
 
             # extract the unique list of client IP's
             client_tcb = ss_clients.splitlines()[1::]
